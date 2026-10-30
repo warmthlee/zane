@@ -1,0 +1,31 @@
+{
+  "project": "zane-blog",
+  "session": {
+    "id": "replace-with-session-id",
+    "startedAt": "2026-10-29T00:00:00Z",
+    "owner": "human-or-team",
+    "agent": "claude|codex|copilot|other",
+    "mode": "plan|implement|review|release"
+  },
+  "task": {
+    "title": "task title",
+    "scope": [
+      "in-scope item",
+      "out-of-scope item"
+    ],
+    "acceptanceCriteria": [
+      "clear, testable outcome"
+    ]
+  },
+  "artifacts": {
+    "filesChanged": [],
+    "docsUpdated": [],
+    "verification": []
+  },
+  "status": {
+    "inProgress": true,
+    "completed": false,
+    "blocked": false,
+    "notes": ""
+  }
+}
