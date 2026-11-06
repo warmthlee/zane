@@ -1,0 +1,33 @@
+name: Deploy React App to 1Panel
+
+on:
+  push:
+    branches: [ main ] # 或者你的主分支名称，如 master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # 根据你的项目选择合适的版本
+          cache: 'npm' # 如果使用 yarn 或 pnpm，请相应调整
+
+      - name: Install dependencies and build
+        run: |
+          npm ci
+          npm run build # 如果构建命令不同，请修改
+
+      - name: Deploy to server via rsync
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          path: build/ # 或 dist/，取决于你的 React 项目构建输出目录
+          remote_path: ${{ secrets.DEPLOY_PATH }}
+          remote_host: ${{ secrets.SERVER_HOST }}
+          remote_user: ${{ secrets.SERVER_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
