@@ -14,7 +14,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # 根据你的项目选择合适的版本
+          node-version: '24' # 与 CI 和本地保持一致（Vite 8 / TS 7 要求 Node 20.19+）
           cache: 'npm' # 如果使用 yarn 或 pnpm，请相应调整
 
       - name: Install dependencies and build

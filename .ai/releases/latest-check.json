@@ -1,12 +1,18 @@
 {
-  "timestamp": "2026-10-30T03:21:11.094Z",
+  "timestamp": "2026-11-07T08:25:06.178Z",
   "project": "zane-blog",
   "commands": [
     "npm run build",
-    "npm run lint"
+    "npm run lint",
+    "dotnet build src-dotnet/Zane.sln",
+    "dotnet test src-dotnet/Zane.sln --no-build",
+    "dotnet tool restore",
+    "dotnet ef migrations has-pending-model-changes --project src-dotnet/Zane.Api",
+    "dotnet ef database update --project src-dotnet/Zane.Api --connection \"Data Source=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\zane-migration-check-19120.db\"",
+    "dotnet ef database update --project src-dotnet/Zane.Api --connection \"Data Source=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\zane-migration-check-19120.db\""
   ],
   "status": "success",
   "notes": [
-    "build and lint passed for the release gate"
+    "build, lint, backend tests and repeatable migration rehearsal passed for the release gate"
   ]
 }

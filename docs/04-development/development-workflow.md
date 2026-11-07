@@ -16,9 +16,10 @@ npm install
 npm run dev -- --host 0.0.0.0
 ```
 
-后端（迁移后）：
+后端：
 
 ```bash
+dotnet tool restore
 dotnet restore
 dotnet ef database update --project src-dotnet/Zane.Api
 dotnet run --project src-dotnet/Zane.Api
@@ -32,13 +33,12 @@ dotnet run --project src-dotnet/Zane.Api
 | `npm run build` | 前端类型检查 + 构建 | 可用 |
 | `npm run lint` | oxlint | 可用 |
 | `npm run preview` | 预览前端产物 | 可用 |
-| `dotnet build` | 后端编译 | 规划 |
-| `dotnet run --project src-dotnet/Zane.Api` | 启动后端 | 规划 |
-| `dotnet test` | 后端测试 | 规划 |
-| `dotnet ef migrations add <Name> --project src-dotnet/Zane.Api` | 新增迁移 | 规划 |
-| `dotnet ef database update --project src-dotnet/Zane.Api` | 应用迁移 | 规划 |
-
-规划中的命令在迁移完成前不可用，不要假设其存在。
+| `npm run release:check` | 发布门禁：前端 build/lint、后端 build/test、空库迁移演练 | 可用 |
+| `dotnet build` | 后端编译 | 可用 |
+| `dotnet run --project src-dotnet/Zane.Api` | 启动后端 | 可用 |
+| `dotnet test` | 后端测试 | 可用 |
+| `dotnet ef migrations add <Name> --project src-dotnet/Zane.Api` | 新增迁移 | 可用 |
+| `dotnet ef database update --project src-dotnet/Zane.Api` | 应用迁移 | 可用 |
 
 ## 分支与提交
 

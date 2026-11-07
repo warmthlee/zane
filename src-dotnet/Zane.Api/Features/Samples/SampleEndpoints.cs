@@ -2,12 +2,15 @@ namespace Zane.Api.Features.Samples;
 
 /// <summary>
 /// 非生产环境的示例端点：校验与异常模型的验收载体，不进入生产环境。
+/// 同时排除在 OpenAPI 之外，避免开发环境下的契约生成物随宿主环境漂移。
 /// </summary>
 public static class SampleEndpoints
 {
     public static IEndpointRouteBuilder MapSampleEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/v1/samples").WithTags("Samples");
+        var group = app.MapGroup("/api/v1/samples")
+            .WithTags("Samples")
+            .ExcludeFromDescription();
 
         group.MapPost("/echo", (EchoRequest request) => TypedResults.Ok(new EchoResponse(request.Message)))
             .WithName("Echo")

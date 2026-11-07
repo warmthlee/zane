@@ -25,6 +25,7 @@ dist-ssr
 # .NET build artifacts
 bin/
 obj/
+publish/
 .vs/
 *.user
 

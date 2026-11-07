@@ -17,6 +17,7 @@
 - 阶段 1 · S2 EF Core 最小模型：`Note` 实体与 `AppDbContext`、`InitialCreate` 迁移、SQLite WAL/外键/忙等待设置、健康检查接入真实数据库探针。
 - 阶段 1 · S3 前端工程化补齐：Tailwind CSS v4（仅 theme + utilities，不引入 preflight 以保持既有视觉）、`@/` 别名、shadcn/ui 初始化与 `button`/`card`/`input`；前端目录重构为 `app/`、`components/`、`features/notes/`、`lib/`、`styles/`。
 - 阶段 1 · S4 接通契约：后端构建时输出 `src/api-client/Zane.Api.json`，`npm run api:generate` 生成 `schema.ts` 与类型化 `client.ts`；首页新增后端健康状态条，Vite dev 代理 `/api` 到本地后端。
+- 阶段 1 · S5 CI 与发布门禁：GitHub Actions 覆盖前后端 build/test、OpenAPI 契约一致性与数据库迁移演练；`main` 构建上传 `zane-api` artifact（含自包含 `efbundle`）；`npm run release:check` 同步扩展为本地发布门禁。
 
 ### Changed
 

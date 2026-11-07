@@ -8,14 +8,30 @@
 | preview | 发布前验证 | 静态产物 | 独立进程 | 数据库副本 |
 | production | 线上 | 1Panel/Nginx | systemd/1Panel 托管 Kestrel | 生产 SQLite |
 
-## 前端 CI（现有）
+## CI 流水线（现有）
+
+`.github/workflows/ci.yml` 在所有分支的 push 与 pull request 上执行，Node 24、.NET SDK 10.0.x：
+
+| Job | 命令 | 作用 |
+| --- | --- | --- |
+| `frontend` | `npm ci`、`npm run lint`、`npm run build` | 前端类型检查与构建 |
+| `backend` | `dotnet restore`、`dotnet build src-dotnet/Zane.sln -c Release`、`dotnet test src-dotnet/Zane.sln -c Release --no-build` | 后端编译与测试 |
+| `contract` | `npm ci`、`npm run api:generate`、`git diff --exit-code -- src/api-client` | 契约生成物必须与提交内容一致 |
+| `migration` | `dotnet tool restore`、`dotnet ef migrations has-pending-model-changes`、`dotnet ef database update`（空库执行两次） | 确认模型已有迁移，且迁移可重复应用 |
+| `package` | `dotnet publish src-dotnet/Zane.Api -c Release -o publish/api`、`dotnet ef migrations bundle` | 仅 `main` 的 push 运行；上传 `zane-api` artifact（含自包含 `efbundle`），保留 14 天 |
+
+`contract` job 首次运行会联网下载脚本中固定的 `openapi-typescript@7.13.0` 与 `typescript@5.9.3`；随后以 `git diff --exit-code` 判定契约漂移，任何生成物变化都必须提交。
+
+## 前端部署
 
 `.github/workflows/deploy.yml`：
 
 1. push 到 `main`。
-2. `actions/setup-node`（Node 20）。
+2. `actions/setup-node`（Node 24）。
 3. `npm ci` + `npm run build`。
 4. 通过 `burnett01/rsync-deployments` 将 `dist/` 同步到 1Panel 服务器。
+
+`deploy.yml` 只发布静态前端；后端按下一节的 `zane-api` 产物发布。
 
 所需 secrets：
 
@@ -30,14 +46,33 @@
 
 前端源码固定为 `src/`，Vite 配置与 `index.html` 在仓库根目录；建站脚本据此调整构建与产物路径。
 
-## 后端部署（规划）
+## 后端部署
 
-1. 安装 .NET 10 Runtime（或使用自包含发布）。
-2. `dotnet publish src-dotnet/Zane.Api -c Release -o /opt/zane/api`。
-3. 配置 `appsettings.Production.json` 与环境变量：连接字符串、日志级别。
-4. 执行迁移：`dotnet ef database update` 或发布时生成的迁移包。
-5. 由 systemd/1Panel 启动并托管进程。
-6. 健康检查 `/api/v1/health`。
+后端使用 `main` 上 CI `package` job 产出的 `zane-api` artifact（已含自包含 `efbundle`），不在生产机安装 SDK。
+
+```bash
+# 1. 下载最近一次 main 构建的产物
+gh run download <run-id> -n zane-api -D /tmp/zane-api
+
+# 2. 同步到发布目录（--delete 只清理产物目录，不触碰 /var/lib/zane）
+rsync -avzr --delete /tmp/zane-api/ server:/opt/zane/api/
+
+# 3. 备份数据库
+ssh server 'cp /var/lib/zane/zane.db /var/lib/zane/backup/zane-$(date +%F-%H%M).db'
+
+# 4. 应用迁移（迁移包只执行未应用的迁移，可重复运行）
+ssh server 'cd /opt/zane/api && ./efbundle --connection "Data Source=/var/lib/zane/zane.db"'
+
+# 5. 重启进程并验证
+ssh server 'sudo systemctl restart zane-api'
+curl -f http://127.0.0.1:5080/api/v1/health
+```
+
+1. 生产机安装 .NET 10 Runtime（或改用自包含发布）。
+2. 配置 `appsettings.Production.json` 与环境变量：连接字符串、日志级别。
+3. `efbundle` 由 CI 用 `dotnet ef migrations bundle --self-contained -r linux-x64` 生成，按迁移历史只执行待应用迁移；执行前必须先完成上面的数据库备份。
+4. 由 systemd/1Panel 启动并托管进程。
+5. 健康检查 `/api/v1/health`。
 
 示例 systemd 单元（示意）：
 

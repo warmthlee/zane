@@ -15,7 +15,7 @@
 3. 后端 `dotnet build`。
 4. 后端 `dotnet test`。
 5. 关键页面手动检查。
-6. 数据库迁移演练（如涉及）。
+6. 数据库迁移演练（如涉及）：本地执行 `npm run release:check`（临时空库上重复应用迁移，并检查模型无待生成迁移），或确认 CI `migration` job 通过；有新迁移时另在生产备份副本上演练一次。
 7. 变更摘要与验收记录已写完。
 
 任一项失败不得发布。
@@ -38,9 +38,9 @@
 
 ### 3. 发布
 
-1. 后端：`dotnet publish -c Release`，更新服务进程（向后兼容）。
-2. 执行迁移。
-3. 前端：push `main` 触发 GitHub Actions，构建后 rsync 到 1Panel。
+1. 后端：从 `main` 的 CI `package` job 下载 `zane-api` artifact，按 `deployment.md` 更新服务进程（向后兼容）。
+2. 备份数据库后用产物中的 `efbundle` 应用迁移。
+3. 前端：push `main` 触发 `deploy.yml`，构建后 rsync 到 1Panel。
 4. 先兼容后端再发前端，避免旧前端调用不存在接口。
 
 ### 4. 发布后

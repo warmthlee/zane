@@ -54,7 +54,7 @@ Claude Code 中可直接用 `/step S1`，模板在 [`../../.claude/commands/step
 | S2 | EF Core 最小模型 | S1 | `Note` 实体、`AppDbContext`、首个迁移 | PLAT-03 | done |
 | S3 | 前端工程化补齐 | S0 | Tailwind + shadcn/ui、`@/` 别名、目录重构 | PLAT-01、PLAT-11 | done |
 | S4 | 接通契约 | S1、S3 | `src/api-client` 生成、前端调用健康接口 | PLAT-04 | done |
-| S5 | CI 与发布门禁 | S1、S4 | 前后端构建测试流水线 | PLAT-07 | todo |
+| S5 | CI 与发布门禁 | S1、S4 | 前后端构建测试流水线 | PLAT-07 | done |
 
 S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两者都完成。
 
@@ -190,11 +190,11 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 **任务**
 
-- [ ] CI 增加 `dotnet build` 与 `dotnet test`。
-- [ ] 保留前端 `npm ci` + `npm run build` + `npm run lint`。
-- [ ] 后端 `dotnet publish` 产物进入发布流程。
-- [ ] 更新 [`../06-release/deployment.md`](../06-release/deployment.md) 的实际路径与命令。
-- [ ] 发布前检查清单补充迁移演练。
+- [x] CI 增加 `dotnet build` 与 `dotnet test`。
+- [x] 保留前端 `npm ci` + `npm run build` + `npm run lint`。
+- [x] 后端 `dotnet publish` 产物进入发布流程。
+- [x] 更新 [`../06-release/deployment.md`](../06-release/deployment.md) 的实际路径与命令。
+- [x] 发布前检查清单补充迁移演练。
 
 **产出**：可复现的 CI 配置与对齐的发布文档。
 
@@ -234,7 +234,7 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | S2 | `Domain/Note.cs`（`Guid` v7、UTC `DateTimeOffset`、`TimeProvider`）、`Data/AppDbContext.cs`、`NoteConfiguration`、`SqlitePragmaInterceptor`、`DatabaseHealthProbe`、`Migrations/InitialCreate`；根目录 `dotnet-tools.json` 固定 `dotnet-ef` 10.0.14 | 表 `notes`（`id,title,content_md,status,created_at,updated_at,published_at`）；状态以字符串存 `Draft/Published/Archived`；时间统一 UTC；连接串键 `ConnectionStrings:Default`；`AddDataAccess()` 在解析 `DbContext` 时读配置；WAL / `foreign_keys=ON` / `busy_timeout=5000` 由连接拦截器应用；健康检查 `CanConnectAsync` 失败返回 503 | S2 完成，S3（前端）可独立开始；部署或本地运行前先 `dotnet ef database update`，否则健康检查 503；`dotnet ef` 为本地工具，克隆后需 `dotnet tool restore` |
 | S3 | Tailwind CSS v4（`@tailwindcss/vite`，仅 `theme` + `utilities` 层）、`@/` 别名（`vite.config.ts` + `tsconfig.app.json`）、shadcn/ui 初始化（`components.json`、`src/lib/utils.ts`）与 `button`/`card`/`input`；目录重构为 `src/app/`、`src/components/{layout,ui}/`、`src/features/notes/{components,content}/` 与 `data.ts`/`types.ts`/`utils.tsx`、`src/styles/{index.css,app.css}` | 路径别名 `@/` = `src/`；样式入口顺序 `index.css` → `app.css`，`app.css` 保持无 `@layer` 以覆盖 Tailwind 与 shadcn token；`--card/--border/--accent` 等同名 token 由 `app.css` 后加载胜出；不引入 Tailwind preflight，`@layer base` 仅保留 box-sizing/border 最小重置；shadcn 组件源码入库，`cn` 来自 `cn` 包 | S4 依赖 S1、S3 均完成；需要在 `src/api-client/` 生成类型并让前端调用 `/api/v1/health`；后端端口 5000，前端尚未配置 `/api` 代理，S4 一并处理 |
 | S4 | `src/api-client/`：`Zane.Api.json`（后端构建时由 `Microsoft.Extensions.ApiDescription.Server` 输出）、`schema.ts`（`openapi-typescript` 生成）、`client.ts`（唯一 `fetch` 封装，含超时与 `ApiError`）；`npm run api:generate` 一条命令重建；首页新增 `BackendStatus` 展示加载/成功/失败；Vite dev 代理 `/api` → `http://localhost:5000` | 生成器为 `openapi-typescript@7.13.0`，因项目用 TypeScript 7，经 `npx` 同时固定 `typescript@5.9.3` 运行；生成物入库、不手改；API 基址 `VITE_API_BASE_URL`（默认为空，同源 `/api`）；HTTP 失败抛 `ApiError`（携带 ProblemDetails），网络失败由调用方捕获 | S5 需同时具备 .NET SDK 与 Node；CI 中 `npm run api:generate` 首次会联网拉取固定的 npx 包，并需校验生成后无 diff；生产由 Nginx 反代 `/api` 到后端 |
-| S5 | 待填写 | 待填写 | 待填写 |
+| S5 | 新增 `.github/workflows/ci.yml`：`frontend`（`npm ci`/`lint`/`build`）、`backend`（restore/build/test Release）、`contract`（`npm run api:generate` 后 `git diff --exit-code src/api-client`）、`migration`（待迁移模型检查 + 空库两次 `database update`）、`package`（仅 main push：`dotnet publish` + 自包含 `efbundle`，上传 `zane-api` 14 天）；`deploy.yml` Node 20→24；`npm run release:check` 扩为前后端 build/test + 迁移演练；示例端点加 `ExcludeFromDescription()` 修复契约随宿主环境漂移；`docs/06-release/deployment.md` 改为按 artifact 发布 | Node 24、.NET SDK 10.0.x；artifact 名 `zane-api`，含 `publish/api` 与 `efbundle`；契约以 `src/api-client` 为准，生成物不含 samples；生产路径 `/opt/zane/api`、数据库 `/var/lib/zane/zane.db`、端口 `127.0.0.1:5080`；迁移用 `cd /opt/zane/api && ./efbundle --connection "Data Source=/var/lib/zane/zane.db"` | 首次 `main` push 后确认 `package` job 与 artifact 可下载；生产机安装 .NET 10 Runtime；下一步进入阶段 1 出口验收 G1–G8 |
 
 ## 验收记录
 
@@ -272,6 +272,14 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | 2026-11-07 | S4 | 客户端在线/离线调用 | 在线返回健康 JSON；指向未监听端口时抛 `TypeError: fetch failed`，由 `BackendStatus` 捕获并切换错误态 | 同上 |
 | 2026-11-07 | S4 | 降级：停掉后端后请求 | 代理返回 `502`；前端页面仍返回 `200`（不白屏），组件进入错误态 | 无 |
 | 2026-11-07 | S4 | `grep -rn "fetch(" src --include=*.ts --include=*.tsx` | 仅 `src/api-client/client.ts:28` 一处手写 `fetch` | 无 |
+| 2026-11-07 | S5 | `npm ci && npm run lint && npm run build` | 安装 360 包；lint 退出码 0（仅既有 shadcn button 警告）；`vite build` 通过（CSS 47.71 kB、JS 262.83 kB） | 无 |
+| 2026-11-07 | S5 | `dotnet restore && dotnet build -c Release --no-restore && dotnet test -c Release --no-build` | 构建 0 warning 0 error；测试失败 0，通过 7，总计 7 | 无 |
+| 2026-11-07 | S5 | `npm run api:generate && git diff --exit-code -- src/api-client` | 生成成功且无 diff；另发现 `dotnet ef` 以 Development 宿主构建会写入 samples 端点，已在 `SampleEndpoints` 加 `ExcludeFromDescription()`，随后 Debug/Release/ef 构建均无 diff | 生成器仍需在 CI 联网拉取固定 npx 包 |
+| 2026-11-07 | S5 | `dotnet tool restore && dotnet ef migrations has-pending-model-changes` + 空库连续两次 `dotnet ef database update` | 模型无待生成迁移；第一次应用 `20261107065027_InitialCreate`，第二次输出 `No migrations were applied` | 临时库文件执行后已清理 |
+| 2026-11-07 | S5 | `npm run release:check` | 退出码 0，输出 `Release validation succeeded`，写入 `.ai/releases/latest-check.json` | 无 |
+| 2026-11-07 | S5 | 推送 `ci/s5-verify`（`620a614`），GitHub Actions run [`42355472575`](https://github.com/warmthlee/zane/actions/runs/42355472575) | 结论 success：前端、后端、OpenAPI 契约一致性、数据库迁移演练 4 个 job 全部通过；`package` 按设计仅 main 运行而跳过 | `package` 已在本机用同一组命令验证 publish + efbundle；首次 main push 后需再确认 artifact |
+| 2026-11-07 | S5 | 推送 `ci/s5-failure`（`4db8a81`，含故意编译错误），run [`42355566033`](https://github.com/warmthlee/zane/actions/runs/42355566033) | 结论 failure；后端 job 日志报 `/home/runner/work/zane/zane/src-dotnet/Zane.Api/CompileFailureProbe.cs(7,9): error CS0103`；契约与迁移 job 同因构建失败 | 临时分支 `ci/s5-verify`、`ci/s5-failure` 已删除 |
+| 2026-11-07 | S5 | 对照 `ci.yml`/`deploy.yml` 与 `docs/06-release/deployment.md` | Node 24、.NET 10.0.x、各 job 命令、artifact `zane-api`、`/opt/zane/api`、`/var/lib/zane/zane.db`、`127.0.0.1:5080`、`efbundle` 均一致 | 无 |
 
 ## 风险与应对
 
