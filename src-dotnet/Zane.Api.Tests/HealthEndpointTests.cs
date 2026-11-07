@@ -1,0 +1,92 @@
+using System.Net;
+using System.Net.Http.Json;
+using System.Text.Json;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Zane.Api.Features.Health;
+
+namespace Zane.Api.Tests;
+
+public sealed class HealthEndpointTests(WebApplicationFactory<Program> factory)
+    : IClassFixture<WebApplicationFactory<Program>>
+{
+    private readonly WebApplicationFactory<Program> _factory = factory;
+
+    [Fact]
+    public async Task GetHealth_ReturnsOkWithJson()
+    {
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/api/v1/health");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+
+        using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        Assert.Equal("healthy", json.RootElement.GetProperty("status").GetString());
+        Assert.Equal("zane-api", json.RootElement.GetProperty("service").GetString());
+    }
+
+    [Fact]
+    public async Task GetHealth_ReturnsServiceUnavailable_WhenDatabaseUnavailable()
+    {
+        using var failingFactory = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.UseEnvironment("Testing");
+            builder.ConfigureTestServices(services =>
+            {
+                services.RemoveAll<IDatabaseHealthProbe>();
+                services.AddSingleton<IDatabaseHealthProbe, UnavailableDatabaseHealthProbe>();
+            });
+        });
+        var client = failingFactory.CreateClient();
+
+        var response = await client.GetAsync("/api/v1/health");
+
+        Assert.Equal(HttpStatusCode.ServiceUnavailable, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task GetOpenApi_ContainsHealthEndpoint()
+    {
+        var client = _factory.CreateClient();
+
+        var response = await client.GetAsync("/openapi/v1.json");
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Contains("/api/v1/health", await response.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task UnhandledException_ReturnsProblemDetails()
+    {
+        using var throwingFactory = _factory.WithWebHostBuilder(builder => builder.UseEnvironment("Testing"));
+        var client = throwingFactory.CreateClient();
+
+        var response = await client.GetAsync("/api/v1/samples/throw");
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Echo_ReturnsValidationProblem_WhenMessageIsEmpty()
+    {
+        using var testingFactory = _factory.WithWebHostBuilder(builder => builder.UseEnvironment("Testing"));
+        var client = testingFactory.CreateClient();
+
+        var response = await client.PostAsJsonAsync("/api/v1/samples/echo", new { message = "" });
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    private sealed class UnavailableDatabaseHealthProbe : IDatabaseHealthProbe
+    {
+        public Task<bool> IsHealthyAsync(CancellationToken cancellationToken) => Task.FromResult(false);
+    }
+}

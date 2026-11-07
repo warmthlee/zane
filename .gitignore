@@ -20,8 +20,13 @@ dist-ssr
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
 *.sw?
+
+# .NET build artifacts
+bin/
+obj/
+.vs/
+*.user
 
 # Context Forge configuration (added automatically)
 .context-forge/

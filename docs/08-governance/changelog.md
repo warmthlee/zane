@@ -13,6 +13,7 @@
 - `AGENTS.md`（中文跨 Agent 契约）与 `CLAUDE.md`（Claude Code 入口）。
 - shadcn/ui 作为唯一 UI 组件来源：CLI 加入 `src/components/ui/`，组件源码入库。
 - 阶段 1 · S0 固化文档基线：文档与协作契约按目录分组提交，工作区回到干净状态。
+- 阶段 1 · S1 后端 walking skeleton：`src-dotnet/`（`Zane.sln`、`Zane.Api`、`Zane.Api.Tests`）、`/api/v1/health`、`/openapi/v1.json`、ProblemDetails + `IExceptionHandler`、`AddValidation()` 示例端点与 xUnit 测试。
 
 ### Changed
 
