@@ -28,5 +28,10 @@ obj/
 .vs/
 *.user
 
+# Local SQLite databases (runtime data, never committed)
+*.db
+*.db-shm
+*.db-wal
+
 # Context Forge configuration (added automatically)
 .context-forge/

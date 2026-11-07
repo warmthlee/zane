@@ -51,7 +51,7 @@ Claude Code 中可直接用 `/step S1`，模板在 [`../../.claude/commands/step
 | --- | --- | --- | --- | --- | --- |
 | S0 | 固化文档基线 | — | 文档基线提交 | PLAT-01 | done |
 | S1 | 后端 walking skeleton | S0 | `src-dotnet/` 解决方案、健康检查、OpenAPI | PLAT-02、PLAT-05、PLAT-06 | done |
-| S2 | EF Core 最小模型 | S1 | `Note` 实体、`AppDbContext`、首个迁移 | PLAT-03 | todo |
+| S2 | EF Core 最小模型 | S1 | `Note` 实体、`AppDbContext`、首个迁移 | PLAT-03 | done |
 | S3 | 前端工程化补齐 | S0 | Tailwind + shadcn/ui、`@/` 别名、目录重构 | PLAT-01、PLAT-11 | todo |
 | S4 | 接通契约 | S1、S3 | `src/api-client` 生成、前端调用健康接口 | PLAT-04 | todo |
 | S5 | CI 与发布门禁 | S1、S4 | 前后端构建测试流水线 | PLAT-07 | todo |
@@ -231,7 +231,7 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | --- | --- | --- | --- |
 | S0 | 已按目录分组提交：`.gitignore`、`.ai/`+`.claude/`、根入口文档（README/AGENTS/CLAUDE）、`docs/` 重组，共 4 次提交 | 后续每步提交单独成次且信息带步骤 ID（如 `feat(S1): …`）；文档入口为 `docs/README.md`，交付计划为 `docs/01-requirements/delivery-plan.md` | 工作树干净；本机 .NET SDK 10.0.403 可用；S1 需先移除 `.gitignore` 中的 `*.sln` 规则，再新建 `src-dotnet/Zane.sln`、`Zane.Api`、`Zane.Api.Tests` |
 | S1 | `src-dotnet/Zane.sln`（.sln 格式）、`Zane.Api`（`/api/v1/health`、`/openapi/v1.json`、ProblemDetails + `IExceptionHandler`、`AddValidation()` 示例端点）、`Zane.Api.Tests`（xUnit 5 条）、仓库级 `NuGet.Config`；`.gitignore` 移除 `*.sln`、忽略 `bin/`/`obj/` | 端口 5000；健康响应 `{status,service,checkedAtUtc}`；错误统一 `application/problem+json`；示例端点仅在非 Production 映射于 `/api/v1/samples/*`；`IDatabaseHealthProbe` 是数据库探针扩展点；`public partial class Program` 供测试宿主 | S2 注册 `AppDbContext` 并移除 `PlaceholderDatabaseHealthProbe`，让健康检查走真实数据库探针；连接串走配置；`dotnet ef` 工具可用 |
-| S2 | 待填写 | 待填写 | 待填写 |
+| S2 | `Domain/Note.cs`（`Guid` v7、UTC `DateTimeOffset`、`TimeProvider`）、`Data/AppDbContext.cs`、`NoteConfiguration`、`SqlitePragmaInterceptor`、`DatabaseHealthProbe`、`Migrations/InitialCreate`；根目录 `dotnet-tools.json` 固定 `dotnet-ef` 10.0.14 | 表 `notes`（`id,title,content_md,status,created_at,updated_at,published_at`）；状态以字符串存 `Draft/Published/Archived`；时间统一 UTC；连接串键 `ConnectionStrings:Default`；`AddDataAccess()` 在解析 `DbContext` 时读配置；WAL / `foreign_keys=ON` / `busy_timeout=5000` 由连接拦截器应用；健康检查 `CanConnectAsync` 失败返回 503 | S2 完成，S3（前端）可独立开始；部署或本地运行前先 `dotnet ef database update`，否则健康检查 503；`dotnet ef` 为本地工具，克隆后需 `dotnet tool restore` |
 | S3 | 待填写 | 待填写 | 待填写 |
 | S4 | 待填写 | 待填写 | 待填写 |
 | S5 | 待填写 | 待填写 | 待填写 |
@@ -250,6 +250,13 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | 2026-11-07 | S1 | `curl -i http://localhost:5000/api/v1/samples/throw`（`ASPNETCORE_ENVIRONMENT=Testing`） | `500`，`application/problem+json`，含 type/title/status/detail/traceId | Development 下自动 DeveloperExceptionPage 返回 HTML；异常验收须用非 Development 环境 |
 | 2026-11-07 | S1 | `POST /api/v1/samples/echo`，`{"message":""}` | `400`，`application/problem+json`，`errors.Message` 命中校验 | 无 |
 | 2026-11-07 | S1 | 首次 `dotnet restore` | 全局 NuGet 含不可达 `http://localhost:9090`，报 NU1301；新增仓库级 `NuGet.Config` 固定 nuget.org 后 restore 通过 | 仓库根新增 `NuGet.Config`，后续 CI 同样使用 |
+| 2026-11-07 | S2 | `dotnet ef migrations add InitialCreate --project src-dotnet/Zane.Api` | `Build succeeded.` / `Done.`，无警告；生成 `20261107065027_InitialCreate` | `dotnet ef` 为本地工具 10.0.14，克隆后需 `dotnet tool restore` |
+| 2026-11-07 | S2 | `dotnet ef database update --project src-dotnet/Zane.Api` | 建表成功；`__EFMigrationsHistory` 记录 `20261107065027_InitialCreate / 10.0.14` | 每次启动前须先迁移，否则健康检查 503 |
+| 2026-11-07 | S2 | sqlite3 进程 A 写入，进程 B 读取 | A 写入 `持久化验证`；B 读到 `持久化验证 / Draft`，数据仍在 | EF 侧由 `Note_PersistsAcrossDbContextRestarts` 覆盖 |
+| 2026-11-07 | S2 | `dotnet test src-dotnet/Zane.sln` | 失败 0，通过 7，总计 7 | 含真实数据库探针 503 测试 |
+| 2026-11-07 | S2 | `curl -i http://localhost:5000/api/v1/health`（数据库可用） | `200`，`{"status":"healthy",...}` | 无 |
+| 2026-11-07 | S2 | `curl -i .../health`（`ConnectionStrings__Default` 指向不存在目录） | `503`，`application/problem+json`，`数据库不可用，健康检查失败。` | 以不可达路径模拟数据库不可用；Windows 下未改文件 ACL |
+| 2026-11-07 | S2 | `PRAGMA journal_mode` / `.tables` | `wal`；`notes`、`__EFMigrationsHistory`、`__EFMigrationsLock` 存在 | 无 |
 | 2026-11-07 | S0 | `git log -1 --stat` | `51ae210 docs(S0): 文档按生命周期目录重组并移除旧目录`，61 个文件全部为 `docs/` 下文档 | 无 |
 
 ## 风险与应对

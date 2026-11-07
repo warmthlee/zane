@@ -1,3 +1,4 @@
+using Zane.Api.Data;
 using Zane.Api.Features.Health;
 using Zane.Api.Features.Samples;
 using Zane.Api.Infrastructure;
@@ -7,9 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddValidation();
 builder.Services.AddProblemDetails();
+builder.Services.AddDataAccess();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddSingleton(TimeProvider.System);
-builder.Services.AddSingleton<IDatabaseHealthProbe, PlaceholderDatabaseHealthProbe>();
+builder.Services.AddScoped<IDatabaseHealthProbe, DatabaseHealthProbe>();
 
 var app = builder.Build();
 

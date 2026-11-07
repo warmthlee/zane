@@ -2,18 +2,12 @@ using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Zane.Api.Features.Health;
 
 namespace Zane.Api.Tests;
 
-public sealed class HealthEndpointTests(WebApplicationFactory<Program> factory)
-    : IClassFixture<WebApplicationFactory<Program>>
+public sealed class HealthEndpointTests(ZaneApiFactory factory) : IClassFixture<ZaneApiFactory>
 {
-    private readonly WebApplicationFactory<Program> _factory = factory;
+    private readonly ZaneApiFactory _factory = factory;
 
     [Fact]
     public async Task GetHealth_ReturnsOkWithJson()
@@ -31,17 +25,9 @@ public sealed class HealthEndpointTests(WebApplicationFactory<Program> factory)
     }
 
     [Fact]
-    public async Task GetHealth_ReturnsServiceUnavailable_WhenDatabaseUnavailable()
+    public async Task GetHealth_ReturnsServiceUnavailable_WhenDatabaseCannotConnect()
     {
-        using var failingFactory = _factory.WithWebHostBuilder(builder =>
-        {
-            builder.UseEnvironment("Testing");
-            builder.ConfigureTestServices(services =>
-            {
-                services.RemoveAll<IDatabaseHealthProbe>();
-                services.AddSingleton<IDatabaseHealthProbe, UnavailableDatabaseHealthProbe>();
-            });
-        });
+        using var failingFactory = new UnreachableDatabaseFactory();
         var client = failingFactory.CreateClient();
 
         var response = await client.GetAsync("/api/v1/health");
@@ -85,8 +71,12 @@ public sealed class HealthEndpointTests(WebApplicationFactory<Program> factory)
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
-    private sealed class UnavailableDatabaseHealthProbe : IDatabaseHealthProbe
+    private sealed class UnreachableDatabaseFactory : ZaneApiFactory
     {
-        public Task<bool> IsHealthyAsync(CancellationToken cancellationToken) => Task.FromResult(false);
+        protected override string ConnectionString => $"Data Source={Path.Combine(
+            Path.GetTempPath(),
+            Guid.NewGuid().ToString("N"),
+            "missing-directory",
+            "zane.db")}";
     }
 }

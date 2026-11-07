@@ -14,6 +14,7 @@
 - shadcn/ui 作为唯一 UI 组件来源：CLI 加入 `src/components/ui/`，组件源码入库。
 - 阶段 1 · S0 固化文档基线：文档与协作契约按目录分组提交，工作区回到干净状态。
 - 阶段 1 · S1 后端 walking skeleton：`src-dotnet/`（`Zane.sln`、`Zane.Api`、`Zane.Api.Tests`）、`/api/v1/health`、`/openapi/v1.json`、ProblemDetails + `IExceptionHandler`、`AddValidation()` 示例端点与 xUnit 测试。
+- 阶段 1 · S2 EF Core 最小模型：`Note` 实体与 `AppDbContext`、`InitialCreate` 迁移、SQLite WAL/外键/忙等待设置、健康检查接入真实数据库探针。
 
 ### Changed
 
