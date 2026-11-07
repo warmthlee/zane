@@ -1,31 +1,42 @@
 {
-  "project": "zane-blog",
+  "project": "zane-playground",
   "session": {
     "id": "replace-with-session-id",
-    "startedAt": "2026-10-29T00:00:00Z",
+    "startedAt": "2026-11-07T00:00:00Z",
     "owner": "human-or-team",
     "agent": "claude|codex|copilot|other",
     "mode": "plan|implement|review|release"
   },
   "task": {
+    "id": "FR-000",
     "title": "task title",
-    "scope": [
-      "in-scope item",
-      "out-of-scope item"
-    ],
-    "acceptanceCriteria": [
-      "clear, testable outcome"
-    ]
+    "scope": {
+      "in": ["in-scope item"],
+      "out": ["out-of-scope item"]
+    },
+    "acceptanceCriteria": ["clear, testable outcome"]
   },
+  "decisions": [
+    {
+      "summary": "decision and reason",
+      "docRef": "docs/08-governance/adr/README.md"
+    }
+  ],
   "artifacts": {
     "filesChanged": [],
     "docsUpdated": [],
-    "verification": []
+    "verification": [
+      {
+        "command": "npm run build && npm run lint",
+        "result": "passed"
+      }
+    ]
   },
   "status": {
-    "inProgress": true,
+    "state": "in_progress",
     "completed": false,
     "blocked": false,
+    "risks": [],
     "notes": ""
   }
 }
