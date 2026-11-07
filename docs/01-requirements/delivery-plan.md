@@ -49,7 +49,7 @@ Claude Code 中可直接用 `/step S1`，模板在 [`../../.claude/commands/step
 
 | 步骤 | 主题 | 依赖 | 主要产出 | 对应需求 | 状态 |
 | --- | --- | --- | --- | --- | --- |
-| S0 | 固化文档基线 | — | 文档基线提交 | PLAT-01 | doing |
+| S0 | 固化文档基线 | — | 文档基线提交 | PLAT-01 | done |
 | S1 | 后端 walking skeleton | S0 | `src-dotnet/` 解决方案、健康检查、OpenAPI | PLAT-02、PLAT-05、PLAT-06 | todo |
 | S2 | EF Core 最小模型 | S1 | `Note` 实体、`AppDbContext`、首个迁移 | PLAT-03 | todo |
 | S3 | 前端工程化补齐 | S0 | Tailwind + shadcn/ui、`@/` 别名、目录重构 | PLAT-01、PLAT-11 | todo |
@@ -229,7 +229,7 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 | 步骤 | 已完成 | 已定契约 | 下一步前置 |
 | --- | --- | --- | --- |
-| S0 | 待填写 | 待填写 | 待填写 |
+| S0 | 已按目录分组提交：`.gitignore`、`.ai/`+`.claude/`、根入口文档（README/AGENTS/CLAUDE）、`docs/` 重组，共 4 次提交 | 后续每步提交单独成次且信息带步骤 ID（如 `feat(S1): …`）；文档入口为 `docs/README.md`，交付计划为 `docs/01-requirements/delivery-plan.md` | 工作树干净；本机 .NET SDK 10.0.403 可用；S1 需新建 `src-dotnet/Zane.sln`、`Zane.Api`、`Zane.Api.Tests` |
 | S1 | 待填写 | 待填写 | 待填写 |
 | S2 | 待填写 | 待填写 | 待填写 |
 | S3 | 待填写 | 待填写 | 待填写 |
@@ -240,7 +240,8 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 | 日期 | 步骤 | 命令 | 结果 | 遗留 |
 | --- | --- | --- | --- | --- |
-| — | — | — | — | — |
+| 2026-11-07 | S0 | `git status --porcelain` | 无输出，工作区干净 | 无 |
+| 2026-11-07 | S0 | `git log -1 --stat` | `51ae210 docs(S0): 文档按生命周期目录重组并移除旧目录`，61 个文件全部为 `docs/` 下文档 | 无 |
 
 ## 风险与应对
 
