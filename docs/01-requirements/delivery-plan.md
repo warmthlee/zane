@@ -52,7 +52,7 @@ Claude Code 中可直接用 `/step S1`，模板在 [`../../.claude/commands/step
 | S0 | 固化文档基线 | — | 文档基线提交 | PLAT-01 | done |
 | S1 | 后端 walking skeleton | S0 | `src-dotnet/` 解决方案、健康检查、OpenAPI | PLAT-02、PLAT-05、PLAT-06 | done |
 | S2 | EF Core 最小模型 | S1 | `Note` 实体、`AppDbContext`、首个迁移 | PLAT-03 | done |
-| S3 | 前端工程化补齐 | S0 | Tailwind + shadcn/ui、`@/` 别名、目录重构 | PLAT-01、PLAT-11 | todo |
+| S3 | 前端工程化补齐 | S0 | Tailwind + shadcn/ui、`@/` 别名、目录重构 | PLAT-01、PLAT-11 | done |
 | S4 | 接通契约 | S1、S3 | `src/api-client` 生成、前端调用健康接口 | PLAT-04 | todo |
 | S5 | CI 与发布门禁 | S1、S4 | 前后端构建测试流水线 | PLAT-07 | todo |
 
@@ -232,7 +232,7 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | S0 | 已按目录分组提交：`.gitignore`、`.ai/`+`.claude/`、根入口文档（README/AGENTS/CLAUDE）、`docs/` 重组，共 4 次提交 | 后续每步提交单独成次且信息带步骤 ID（如 `feat(S1): …`）；文档入口为 `docs/README.md`，交付计划为 `docs/01-requirements/delivery-plan.md` | 工作树干净；本机 .NET SDK 10.0.403 可用；S1 需先移除 `.gitignore` 中的 `*.sln` 规则，再新建 `src-dotnet/Zane.sln`、`Zane.Api`、`Zane.Api.Tests` |
 | S1 | `src-dotnet/Zane.sln`（.sln 格式）、`Zane.Api`（`/api/v1/health`、`/openapi/v1.json`、ProblemDetails + `IExceptionHandler`、`AddValidation()` 示例端点）、`Zane.Api.Tests`（xUnit 5 条）、仓库级 `NuGet.Config`；`.gitignore` 移除 `*.sln`、忽略 `bin/`/`obj/` | 端口 5000；健康响应 `{status,service,checkedAtUtc}`；错误统一 `application/problem+json`；示例端点仅在非 Production 映射于 `/api/v1/samples/*`；`IDatabaseHealthProbe` 是数据库探针扩展点；`public partial class Program` 供测试宿主 | S2 注册 `AppDbContext` 并移除 `PlaceholderDatabaseHealthProbe`，让健康检查走真实数据库探针；连接串走配置；`dotnet ef` 工具可用 |
 | S2 | `Domain/Note.cs`（`Guid` v7、UTC `DateTimeOffset`、`TimeProvider`）、`Data/AppDbContext.cs`、`NoteConfiguration`、`SqlitePragmaInterceptor`、`DatabaseHealthProbe`、`Migrations/InitialCreate`；根目录 `dotnet-tools.json` 固定 `dotnet-ef` 10.0.14 | 表 `notes`（`id,title,content_md,status,created_at,updated_at,published_at`）；状态以字符串存 `Draft/Published/Archived`；时间统一 UTC；连接串键 `ConnectionStrings:Default`；`AddDataAccess()` 在解析 `DbContext` 时读配置；WAL / `foreign_keys=ON` / `busy_timeout=5000` 由连接拦截器应用；健康检查 `CanConnectAsync` 失败返回 503 | S2 完成，S3（前端）可独立开始；部署或本地运行前先 `dotnet ef database update`，否则健康检查 503；`dotnet ef` 为本地工具，克隆后需 `dotnet tool restore` |
-| S3 | 待填写 | 待填写 | 待填写 |
+| S3 | Tailwind CSS v4（`@tailwindcss/vite`，仅 `theme` + `utilities` 层）、`@/` 别名（`vite.config.ts` + `tsconfig.app.json`）、shadcn/ui 初始化（`components.json`、`src/lib/utils.ts`）与 `button`/`card`/`input`；目录重构为 `src/app/`、`src/components/{layout,ui}/`、`src/features/notes/{components,content}/` 与 `data.ts`/`types.ts`/`utils.tsx`、`src/styles/{index.css,app.css}` | 路径别名 `@/` = `src/`；样式入口顺序 `index.css` → `app.css`，`app.css` 保持无 `@layer` 以覆盖 Tailwind 与 shadcn token；`--card/--border/--accent` 等同名 token 由 `app.css` 后加载胜出；不引入 Tailwind preflight，`@layer base` 仅保留 box-sizing/border 最小重置；shadcn 组件源码入库，`cn` 来自 `cn` 包 | S4 依赖 S1、S3 均完成；需要在 `src/api-client/` 生成类型并让前端调用 `/api/v1/health`；后端端口 5000，前端尚未配置 `/api` 代理，S4 一并处理 |
 | S4 | 待填写 | 待填写 | 待填写 |
 | S5 | 待填写 | 待填写 | 待填写 |
 
@@ -258,6 +258,12 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | 2026-11-07 | S2 | `curl -i .../health`（`ConnectionStrings__Default` 指向不存在目录） | `503`，`application/problem+json`，`数据库不可用，健康检查失败。` | 以不可达路径模拟数据库不可用；Windows 下未改文件 ACL |
 | 2026-11-07 | S2 | `PRAGMA journal_mode` / `.tables` | `wal`；`notes`、`__EFMigrationsHistory`、`__EFMigrationsLock` 存在 | 无 |
 | 2026-11-07 | S0 | `git log -1 --stat` | `51ae210 docs(S0): 文档按生命周期目录重组并移除旧目录`，61 个文件全部为 `docs/` 下文档 | 无 |
+| 2026-11-07 | S3 | `npm run build` | `tsc -b && vite build` 通过，`✓ built in 244ms`；`index-DPNO8Els.css` 47.05 kB、`index-6uUyav89.js` 261.19 kB | 无 |
+| 2026-11-07 | S3 | `npm run lint` | 退出码 0；仅 `src/components/ui/button.tsx:66` 的 `react(only-export-components)` 警告 | 警告来自 shadcn 生成物，按上游原样保留 |
+| 2026-11-07 | S3 | 检查 `src/components/ui/` | `button.tsx`、`card.tsx`、`input.tsx` 由 `npx shadcn@latest add button card input` 生成，`components.json` 与 `src/lib/utils.ts` 一并入库 | 无 |
+| 2026-11-07 | S3 | `npm run dev` | `http://localhost:5173/` 启动成功并返回 200 | 无 |
+| 2026-11-07 | S3 | 视觉（本地 `npm run dev`） | 本机无可用无头截图（Edge headless 无输出、Playwright 浏览器 CDN 下载超时），改用 Vite SSR 渲染比对：改造前后首页 HTML **逐字节一致**（6833 字符）；`src/styles/app.css` 与改版前 `src/App.css` 逐字节一致；Tailwind 仅引入 theme/utilities，未引入会重置标题/列表/段落默认样式的 preflight | 建议人工再目视复核一次；页面视觉未做像素级截图回归 |
+| 2026-11-07 | S3 | 构建产物 CSS 层序 | 产物含 `@layer theme/base/components/utilities`；`:root` 中 `--card` 先为 shadcn `oklch`，后为 `app.css` 的 `#fffaf1`，旧主题 token 胜出 | 无 |
 
 ## 风险与应对
 

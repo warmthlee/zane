@@ -15,6 +15,7 @@
 - 阶段 1 · S0 固化文档基线：文档与协作契约按目录分组提交，工作区回到干净状态。
 - 阶段 1 · S1 后端 walking skeleton：`src-dotnet/`（`Zane.sln`、`Zane.Api`、`Zane.Api.Tests`）、`/api/v1/health`、`/openapi/v1.json`、ProblemDetails + `IExceptionHandler`、`AddValidation()` 示例端点与 xUnit 测试。
 - 阶段 1 · S2 EF Core 最小模型：`Note` 实体与 `AppDbContext`、`InitialCreate` 迁移、SQLite WAL/外键/忙等待设置、健康检查接入真实数据库探针。
+- 阶段 1 · S3 前端工程化补齐：Tailwind CSS v4（仅 theme + utilities，不引入 preflight 以保持既有视觉）、`@/` 别名、shadcn/ui 初始化与 `button`/`card`/`input`；前端目录重构为 `app/`、`components/`、`features/notes/`、`lib/`、`styles/`。
 
 ### Changed
 
