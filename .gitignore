@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Context Forge configuration (added automatically)
+.context-forge/
