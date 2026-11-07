@@ -1,75 +1,89 @@
 # CLAUDE.md
 
-## 项目概述
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-这是一个轻量个人博客项目，采用 React + TypeScript + Vite。目标是以最小、稳定、可维护的方式打造一个适合技术学习与知识沉淀的博客站点，同时兼容 Claude Code、Codex、Copilot 等多种 AI Agent 工作流。
+## 项目
 
-## 关键原则
+Zane Playground：记录个人思想与经验、孵化产品 MVP 的个人网站。分模块需求见 `docs/01-requirements/prd/`。
 
-- 项目必须保持 Agent 兼容，不绑定单一工具
-- 优先保留清晰的业务边界，不因 AI 自动生成而扩张功能范围
-- 每个实现任务都要有明确的范围、方案、验收标准和验证方式
-- 文档和代码必须保持一致，避免“只在会话里知道”的隐性知识
-- 任何更改都必须经过最小验证：构建、lint 或目标行为检查
+技术栈：React + TypeScript + Vite + Redux Toolkit + Tailwind CSS + shadcn/ui；后端 .NET 10（LTS）+ ASP.NET Core Minimal APIs；EF Core 10 + SQLite。
 
-## 适用范围
+当前延后：用户鉴权（ADR-007）、社交平台分发（ADR-008）。
 
-### 需要做的
-- 维护博客主页与内容展示结构
-- 保持轻量而稳定的开发体验
-- 完善 AI 协作流程、文档和质量门槛
-- 支持会话持久化和多端恢复思路
-- 定义发布、回滚和日志记录的最小闭环
+## 命令
 
-### 不做的
-- 不扩展到重型 CMS 或复杂数据库应用
-- 不引入业务无关的企业系统
-- 不让 AI 直接代替产品判断与发布确认
-- 不追求过度工程化或单一工具专属流程
-
-## 统一命令
+前端（当前可用）：
 
 ```bash
 npm install
 npm run dev -- --host 0.0.0.0
-npm run build
-npm run lint
+npm run build        # tsc -b && vite build
+npm run lint         # oxlint
+npm run preview
 ```
 
-## 工作要求
+后端（规划，迁移后可用）：
 
-在修改代码前：
-1. 明确需求范围：做什么 / 不做什么
-2. 确认是否需要更新文档
-3. 确认验收标准是否清晰
+```bash
+dotnet restore
+dotnet build
+dotnet run --project src-dotnet/Zane.Api
+dotnet test
+dotnet ef database update --project src-dotnet/Zane.Api
+```
 
-在提交/完成前：
-1. 运行相关验证命令
-2. 检查是否影响现有功能边界
-3. 确认文档与工程实践一致
+当前仓库尚未迁移到 .NET 后端；不要假设 `dotnet` 项目已存在。
 
-## 任务归档要求
+## 架构（目标）
 
-建议保存以下结构化信息：
-- 任务目标
-- 范围定义
-- 关键决策
-- 代码变更摘要
-- 验收结果
-- 发布/回滚备注
+```text
+src/                 React SPA（Vite + RTK + Tailwind + shadcn/ui）
+  api-client/        由 OpenAPI 生成的类型与客户端
+  components/ui/     shadcn/ui 组件（纳入版本控制）
+src-dotnet/          .NET 10 API（Minimal APIs + EF Core）
+  Zane.Api/
+  Zane.Api.Tests/
+  Zane.sln
+docs/                全生命周期文档
+```
 
-优先使用仓库文档和结构化归档文件，不要依赖单一聊天记录作为唯一事实来源。
+- 前端通过 `/api/v1/*` 调用后端；服务端 OpenAPI 是契约唯一来源。
+- 后端按领域组织 `Features/`，使用 `TypedResults`、内置校验、ProblemDetails。
+- 数据只通过 EF Core 10 访问；结构变更必须新增迁移。
+- SQLite 时间统一 UTC；单实例写入，短事务。
+- 热点/股票等外部数据通过适配器接入，使用 `HttpClient` + `HybridCache` + 后台任务。
+- 鉴权落地前，写接口仅限本机或内网。
+- 前端 UI 组件优先使用 shadcn/ui：通过 `npx shadcn@latest add <component>` 加入 `src/components/ui/`，不引第三方重型组件库。
+- 路径别名 `@/` 指向 `src/`；`src/components/ui/` 视为项目自有代码，允许按设计 token 修改。
 
-## Claude Code 特别说明
+完整设计见 `docs/02-architecture/`，决策见 `docs/08-governance/adr/`。
 
-Claude Code 读取此文件作为项目说明，后续所有 AI 协作都应遵循这里定义的边界和命令。
-如果需要切换到其他 Agent（例如 Codex 或 Copilot），应保持相同的任务模板、验证门槛和文档标准，不因工具不同而改变工程规则。
+## .NET 10 约定
 
-## Claude Code 工作入口
+- Minimal APIs + route group；请求/响应使用 `TypedResults`。
+- `AddValidation()` + DataAnnotations 做请求校验。
+- `AddOpenApi()` / `MapOpenApi()` 生成 OpenAPI 3.1，并据此生成前端客户端。
+- 统一 ProblemDetails 与 `IExceptionHandler`。
+- 使用 source-generated JSON、`TimeProvider`、`HybridCache`、OpenTelemetry。
+- C# 14：`field`、扩展成员、空条件赋值、集合表达式、primary constructors。
+- 初期不启用 Native AOT（ADR-009）。
 
-- 根目录 `CLAUDE.md`：项目主说明
-- `.claude/README.md`：Claude Code 工作目录说明
-- `.claude/commands/plan-task.md`：新任务规划模板
-- `.claude/commands/verify-task.md`：完成前验证模板
+## 工作方式
 
-这些文件组合起来，构成 Claude Code 的可执行工作脚手架，使 AI 任务在开始前先定义边界，在完成前先验证结果。 
+1. 开始任务前用 `.claude/commands/plan-task.md` 明确目标、范围、验收与验证命令。
+2. 实现遵循 `AGENTS.md`；本文件只补充 Claude Code 相关约定。
+3. 收尾用 `.claude/commands/verify-task.md`，确认前端 build/lint、后端 build/test、文档一致。
+4. 架构决策新增独立 ADR 文件，并在 `docs/08-governance/adr/README.md` 登记。
+
+## 文档入口
+
+- 总索引：`docs/README.md`
+- 分模块 PRD：`docs/01-requirements/prd/`
+- 架构：`docs/02-architecture/`
+- 开发规范：`docs/04-development/`
+- 发布：`docs/06-release/`
+- ADR：`docs/08-governance/adr/`
+
+## 边界
+
+不引入多租户、企业级权限、重型 CMS；不因 AI 生成速度快而扩张范围。鉴权与社交分发延后，不要提前实现。产品判断与发布确认由人负责。
