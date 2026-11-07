@@ -229,7 +229,7 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 | 步骤 | 已完成 | 已定契约 | 下一步前置 |
 | --- | --- | --- | --- |
-| S0 | 已按目录分组提交：`.gitignore`、`.ai/`+`.claude/`、根入口文档（README/AGENTS/CLAUDE）、`docs/` 重组，共 4 次提交 | 后续每步提交单独成次且信息带步骤 ID（如 `feat(S1): …`）；文档入口为 `docs/README.md`，交付计划为 `docs/01-requirements/delivery-plan.md` | 工作树干净；本机 .NET SDK 10.0.403 可用；S1 需新建 `src-dotnet/Zane.sln`、`Zane.Api`、`Zane.Api.Tests` |
+| S0 | 已按目录分组提交：`.gitignore`、`.ai/`+`.claude/`、根入口文档（README/AGENTS/CLAUDE）、`docs/` 重组，共 4 次提交 | 后续每步提交单独成次且信息带步骤 ID（如 `feat(S1): …`）；文档入口为 `docs/README.md`，交付计划为 `docs/01-requirements/delivery-plan.md` | 工作树干净；本机 .NET SDK 10.0.403 可用；S1 需先移除 `.gitignore` 中的 `*.sln` 规则，再新建 `src-dotnet/Zane.sln`、`Zane.Api`、`Zane.Api.Tests` |
 | S1 | 待填写 | 待填写 | 待填写 |
 | S2 | 待填写 | 待填写 | 待填写 |
 | S3 | 待填写 | 待填写 | 待填写 |
@@ -241,6 +241,7 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | 日期 | 步骤 | 命令 | 结果 | 遗留 |
 | --- | --- | --- | --- | --- |
 | 2026-11-07 | S0 | `git status --porcelain` | 无输出，工作区干净 | 无 |
+| 2026-11-07 | S0 | 检查 `.gitignore` | 含 `*.sln` 规则，会忽略 `src-dotnet/Zane.sln` | S1 创建解决方案前先移除该规则，否则解决方案文件无法入库 |
 | 2026-11-07 | S0 | `git log -1 --stat` | `51ae210 docs(S0): 文档按生命周期目录重组并移除旧目录`，61 个文件全部为 `docs/` 下文档 | 无 |
 
 ## 风险与应对
