@@ -34,8 +34,8 @@
 
 ### Planned
 
-- 落地 `src-dotnet/`、`src/api-client/` 与 shadcn/ui 组件基线。
-- 接入 EF Core 迁移、测试框架与发布门禁。
+- 记录 CRUD 与检索（NOTE-01～NOTE-03）。
+- 结构化日志与请求追踪（PLAT-08）、备份与导出脚本（PLAT-13）。
 
 ## [0.0.0] - 2026-10-29
 

@@ -8,15 +8,19 @@
 
 | ID | 功能 | 优先级 | 状态 | 依赖 |
 | --- | --- | --- | --- | --- |
-| PLAT-01 | 前端统一 `src/`，建立 `src-dotnet/` + `src/api-client/` | P0 | planned | — |
-| PLAT-02 | .NET 10 ASP.NET Core Minimal APIs | P0 | planned | PLAT-01 |
-| PLAT-03 | EF Core 10 + SQLite 接入 | P0 | planned | PLAT-02 |
-| PLAT-04 | OpenAPI 3.1 与 TypeScript 客户端生成 | P0 | planned | PLAT-02 |
-| PLAT-05 | 统一 ProblemDetails 与异常处理 | P0 | planned | PLAT-02 |
-| PLAT-06 | 健康检查（含数据库） | P0 | planned | PLAT-03 |
-| PLAT-07 | 结构化日志与 OpenTelemetry | P1 | planned | PLAT-02 |
-| PLAT-08 | 备份与导出脚本 | P1 | planned | PLAT-03 |
-| PLAT-09 | 用户鉴权 | — | deferred | ADR-007 |
+| PLAT-01 | 前端统一 `src/`，建立 `src-dotnet/` + `src/api-client/` | P0 | done | — |
+| PLAT-02 | .NET 10 ASP.NET Core Minimal APIs | P0 | done | PLAT-01 |
+| PLAT-03 | EF Core 10 + SQLite 接入 | P0 | done | PLAT-02 |
+| PLAT-04 | 统一配置与连接字符串管理 | P0 | done | PLAT-02 |
+| PLAT-05 | 健康检查（含数据库） | P0 | done | PLAT-03 |
+| PLAT-06 | 统一 ProblemDetails 与异常处理 | P0 | done | PLAT-02 |
+| PLAT-07 | OpenAPI 3.1 文档自动生成 | P1 | done | PLAT-02 |
+| PLAT-08 | 结构化日志与请求追踪 | P1 | planned | PLAT-02 |
+| PLAT-09 | 契约驱动：OpenAPI 生成前端类型，校验以服务端为准 | P1 | done | PLAT-07 |
+| PLAT-10 | 用户鉴权 | — | deferred | ADR-007 |
+| PLAT-11 | 前端组件基线：Tailwind + shadcn/ui | P1 | done | PLAT-01 |
+| PLAT-12 | CI 与发布门禁 | P0 | done | PLAT-01～PLAT-09 |
+| PLAT-13 | 数据库备份与内容导出脚本 | P1 | planned | PLAT-03 |
 
 ## 思想记录（PRD-01）
 

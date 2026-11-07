@@ -1,6 +1,6 @@
 # PRD-00 · 平台基础
 
-- 状态：planned
+- 状态：in-progress（阶段 1 骨架完成；PLAT-08、PLAT-13 待实现）
 - 阶段：阶段 1
 - 关联：ADR-001、ADR-004、ADR-005
 
@@ -29,6 +29,8 @@
 | PLAT-09 | 契约驱动：OpenAPI 生成前端类型，校验以服务端为准 | P1 |
 | PLAT-10 | 鉴权 | 延后（见 ADR-007） |
 | PLAT-11 | 前端组件基线：Tailwind + shadcn/ui，组件优先复用 | P1 |
+| PLAT-12 | CI 与发布门禁：前后端构建测试、契约一致性与迁移演练 | P0 |
+| PLAT-13 | 数据库备份与内容导出脚本 | P1 |
 
 ## 技术约束
 
@@ -42,11 +44,11 @@
 
 ## 验收标准
 
-- [ ] `dotnet build` 与 `npm run build` 均通过。
-- [ ] `dotnet test` 通过（测试接入后）。
-- [ ] `dotnet ef database update` 可在空库创建结构。
-- [ ] 健康接口在数据库可用与不可用时分别返回 200 / 503。
-- [ ] OpenAPI 文档可访问且包含全部端点。
+- [x] `dotnet build` 与 `npm run build` 均通过。
+- [x] `dotnet test` 通过（7 条）。
+- [x] `dotnet ef database update` 可在空库创建结构。
+- [x] 健康接口在数据库可用与不可用时分别返回 200 / 503。
+- [x] OpenAPI 文档可访问且包含全部端点。
 
 ## 开放问题
 

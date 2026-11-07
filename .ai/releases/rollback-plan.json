@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-11-07T08:37:49.582Z",
+  "status": "ready",
+  "steps": [
+    "1. Restore the previous publish artifact or git revision that was known-good.",
+    "2. Re-upload the previous dist output to the target hosting environment.",
+    "3. Re-check the site health and ensure route fallback and static assets are still resolving.",
+    "4. Record the failure and the remediation steps for the next release attempt."
+  ],
+  "releaseGate": {
+    "timestamp": "2026-11-07T08:25:06.178Z",
+    "project": "zane-blog",
+    "commands": [
+      "npm run build",
+      "npm run lint",
+      "dotnet build src-dotnet/Zane.sln",
+      "dotnet test src-dotnet/Zane.sln --no-build",
+      "dotnet tool restore",
+      "dotnet ef migrations has-pending-model-changes --project src-dotnet/Zane.Api",
+      "dotnet ef database update --project src-dotnet/Zane.Api --connection \"Data Source=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\zane-migration-check-19120.db\"",
+      "dotnet ef database update --project src-dotnet/Zane.Api --connection \"Data Source=C:\\Users\\Lenovo\\AppData\\Local\\Temp\\zane-migration-check-19120.db\""
+    ],
+    "status": "success",
+    "notes": [
+      "build, lint, backend tests and repeatable migration rehearsal passed for the release gate"
+    ]
+  }
+}

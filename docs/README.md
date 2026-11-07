@@ -2,7 +2,7 @@
 
 本目录覆盖 Zane Playground 的完整生命周期：立项、需求、架构、设计、开发、质量、发布、运营、治理与参考。文档是项目事实来源，优先于聊天记录。
 
-> 状态说明：文档描述目标形态；前端源码已在 `src/`，后端 `src-dotnet/` 尚未建立。迁移状态见 [`01-requirements/roadmap.md`](01-requirements/roadmap.md)。
+> 状态说明：文档描述目标形态；前端 `src/`、后端 `src-dotnet/` 与生成客户端 `src/api-client/` 已建立。执行进度见 [`01-requirements/delivery-plan.md`](01-requirements/delivery-plan.md)，路线状态见 [`01-requirements/roadmap.md`](01-requirements/roadmap.md)。
 
 ## 文档体系来源
 

@@ -53,8 +53,8 @@ Claude Code 中可直接用 `/step S1`，模板在 [`../../.claude/commands/step
 | S1 | 后端 walking skeleton | S0 | `src-dotnet/` 解决方案、健康检查、OpenAPI | PLAT-02、PLAT-05、PLAT-06 | done |
 | S2 | EF Core 最小模型 | S1 | `Note` 实体、`AppDbContext`、首个迁移 | PLAT-03 | done |
 | S3 | 前端工程化补齐 | S0 | Tailwind + shadcn/ui、`@/` 别名、目录重构 | PLAT-01、PLAT-11 | done |
-| S4 | 接通契约 | S1、S3 | `src/api-client` 生成、前端调用健康接口 | PLAT-04 | done |
-| S5 | CI 与发布门禁 | S1、S4 | 前后端构建测试流水线 | PLAT-07 | done |
+| S4 | 接通契约 | S1、S3 | `src/api-client` 生成、前端调用健康接口 | PLAT-07、PLAT-09 | done |
+| S5 | CI 与发布门禁 | S1、S4 | 前后端构建测试流水线 | PLAT-12 | done |
 
 S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两者都完成。
 
@@ -64,9 +64,9 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 **任务**
 
-- [ ] 确认工作区只有文档类改动（`git status`）。
-- [ ] 按目录分组提交；提交信息说明结构与技术基线变更。
-- [ ] 确认提交后工作区干净。
+- [x] 确认工作区只有文档类改动（`git status`）。
+- [x] 按目录分组提交；提交信息说明结构与技术基线变更。
+- [x] 确认提交后工作区干净。
 
 **产出**：一个只含文档的基线提交。
 
@@ -85,13 +85,13 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 **任务**
 
-- [ ] 创建 `src-dotnet/Zane.sln`、`Zane.Api`（Minimal APIs）、`Zane.Api.Tests`（xUnit）。
-- [ ] 测试项目引用 API 项目，`dotnet test` 可执行。
-- [ ] `GET /api/v1/health` 返回 `TypedResults`，数据库不可用时 503。
-- [ ] 接入 `AddOpenApi()` / `MapOpenApi()`，暴露 `/openapi/v1.json`。
-- [ ] 统一 ProblemDetails 与 `IExceptionHandler`。
-- [ ] 请求模型使用 `AddValidation()` + DataAnnotations（至少一个示例端点）。
-- [ ] 至少一条健康检查测试。
+- [x] 创建 `src-dotnet/Zane.sln`、`Zane.Api`（Minimal APIs）、`Zane.Api.Tests`（xUnit）。
+- [x] 测试项目引用 API 项目，`dotnet test` 可执行。
+- [x] `GET /api/v1/health` 返回 `TypedResults`，数据库不可用时 503。
+- [x] 接入 `AddOpenApi()` / `MapOpenApi()`，暴露 `/openapi/v1.json`。
+- [x] 统一 ProblemDetails 与 `IExceptionHandler`。
+- [x] 请求模型使用 `AddValidation()` + DataAnnotations（至少一个示例端点）。
+- [x] 至少一条健康检查测试。
 
 **产出**：可 `dotnet run` 的 API 骨架与可执行的测试项目。
 
@@ -113,12 +113,12 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 **任务**
 
-- [ ] `Note` 实体 + `IEntityTypeConfiguration<Note>`。
-- [ ] `AppDbContext` 注册到 DI，连接串走配置。
-- [ ] 首个迁移 `InitialCreate`，可在空库建表。
-- [ ] SQLite 启用 WAL、`foreign_keys`、`busy_timeout`。
-- [ ] 时间统一 UTC，使用 `TimeProvider` 取时。
-- [ ] 健康检查加入数据库探针。
+- [x] `Note` 实体 + `IEntityTypeConfiguration<Note>`。
+- [x] `AppDbContext` 注册到 DI，连接串走配置。
+- [x] 首个迁移 `InitialCreate`，可在空库建表。
+- [x] SQLite 启用 WAL、`foreign_keys`、`busy_timeout`。
+- [x] 时间统一 UTC，使用 `TimeProvider` 取时。
+- [x] 健康检查加入数据库探针。
 
 **产出**：`src-dotnet/Zane.Api/Data/`、`Migrations/` 与迁移命令可复现。
 
@@ -139,12 +139,12 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 **任务**
 
-- [ ] 安装并配置 Tailwind（`@tailwindcss/vite`）。
-- [ ] 配置 `@/` 别名（`tsconfig` + `vite.config.ts`）。
-- [ ] `npx shadcn@latest init`，落地 `components.json` 与 `src/lib/utils.ts`。
-- [ ] 按需 `npx shadcn@latest add` 首批组件（button、card、input）。
-- [ ] 把 `App.tsx` 拆到 `app/`、`features/`、`components/`。
-- [ ] 现有页面视觉与交互不回归。
+- [x] 安装并配置 Tailwind（`@tailwindcss/vite`）。
+- [x] 配置 `@/` 别名（`tsconfig` + `vite.config.ts`）。
+- [x] `npx shadcn@latest init`，落地 `components.json` 与 `src/lib/utils.ts`。
+- [x] 按需 `npx shadcn@latest add` 首批组件（button、card、input）。
+- [x] 把 `App.tsx` 拆到 `app/`、`features/`、`components/`。
+- [x] 现有页面视觉与交互不回归。
 
 **产出**：符合 [`../02-architecture/frontend-architecture.md`](../02-architecture/frontend-architecture.md) 的目录结构。
 
@@ -165,11 +165,11 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 **任务**
 
-- [ ] 确定生成工具（`openapi-typescript` 或 Kiota）并写入脚本。
-- [ ] 生成物落到 `src/api-client/`，纳入版本控制。
-- [ ] 前端通过生成客户端调用健康接口。
-- [ ] 页面展示后端状态（成功 / 失败 / 加载中）。
-- [ ] 后端端点变更时重新生成，脚本可一条命令完成。
+- [x] 确定生成工具（`openapi-typescript` 或 Kiota）并写入脚本。
+- [x] 生成物落到 `src/api-client/`，纳入版本控制。
+- [x] 前端通过生成客户端调用健康接口。
+- [x] 页面展示后端状态（成功 / 失败 / 加载中）。
+- [x] 后端端点变更时重新生成，脚本可一条命令完成。
 
 **产出**：`src/api-client/` 与一个真实调用后端的前端界面。
 
@@ -212,14 +212,14 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 
 六步全部 `done` 后执行一次整体验收，结果写入本文「验收记录」。
 
-- [ ] **G1 结构**：`src/`、`src-dotnet/`、`src/api-client/` 同时存在且可独立构建。
-- [ ] **G2 构建**：`npm run build`、`npm run lint`、`dotnet build`、`dotnet test` 全部通过。
-- [ ] **G3 契约**：OpenAPI 可访问，生成客户端与后端端点一致。
-- [ ] **G4 数据**：空库可迁移建表，写入数据重启后仍在。
-- [ ] **G5 健康**：数据库可用返回 200，不可用返回 503。
-- [ ] **G6 错误模型**：异常与校验失败均返回 ProblemDetails。
-- [ ] **G7 文档一致**：`docs/README.md` 索引、backlog 状态、changelog 与实际一致。
-- [ ] **G8 可发布**：CI 通过对应用例，回滚步骤可执行。
+- [x] **G1 结构**：`src/`、`src-dotnet/`、`src/api-client/` 同时存在且可独立构建。
+- [x] **G2 构建**：`npm run build`、`npm run lint`、`dotnet build`、`dotnet test` 全部通过。
+- [x] **G3 契约**：OpenAPI 可访问，生成客户端与后端端点一致。
+- [x] **G4 数据**：空库可迁移建表，写入数据重启后仍在。
+- [x] **G5 健康**：数据库可用返回 200，不可用返回 503。
+- [x] **G6 错误模型**：异常与校验失败均返回 ProblemDetails。
+- [x] **G7 文档一致**：`docs/README.md` 索引、backlog 状态、changelog 与实际一致。
+- [x] **G8 可发布**：CI 通过对应用例，回滚步骤可执行。
 
 阶段 1 出口只证明**骨架可用**，不证明 PRD-01 的记录功能完成；记录 CRUD 按 `feature-backlog.md` 的 NOTE-01～03 继续推进。
 
@@ -280,6 +280,14 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | 2026-11-07 | S5 | 推送 `ci/s5-verify`（`620a614`），GitHub Actions run [`42355472575`](https://github.com/warmthlee/zane/actions/runs/42355472575) | 结论 success：前端、后端、OpenAPI 契约一致性、数据库迁移演练 4 个 job 全部通过；`package` 按设计仅 main 运行而跳过 | `package` 已在本机用同一组命令验证 publish + efbundle；首次 main push 后需再确认 artifact |
 | 2026-11-07 | S5 | 推送 `ci/s5-failure`（`4db8a81`，含故意编译错误），run [`42355566033`](https://github.com/warmthlee/zane/actions/runs/42355566033) | 结论 failure；后端 job 日志报 `/home/runner/work/zane/zane/src-dotnet/Zane.Api/CompileFailureProbe.cs(7,9): error CS0103`；契约与迁移 job 同因构建失败 | 临时分支 `ci/s5-verify`、`ci/s5-failure` 已删除 |
 | 2026-11-07 | S5 | 对照 `ci.yml`/`deploy.yml` 与 `docs/06-release/deployment.md` | Node 24、.NET 10.0.x、各 job 命令、artifact `zane-api`、`/opt/zane/api`、`/var/lib/zane/zane.db`、`127.0.0.1:5080`、`efbundle` 均一致 | 无 |
+| 2026-11-07 | 阶段 1 出口 | G1 `test -d src src-dotnet src/api-client` + 独立构建 | 三个目录均存在；前端 `npm run build` 与后端 `dotnet build src-dotnet/Zane.sln` 分别通过 | 无 |
+| 2026-11-07 | 阶段 1 出口 | G2 `npm run build && npm run lint` + `dotnet build && dotnet test` | 前端构建 33 modules、lint 退出码 0（仅既有 shadcn 警告）；后端 0 warning 0 error，测试 7/7 通过 | 无 |
+| 2026-11-07 | 阶段 1 出口 | G3 启动 API，`curl /openapi/v1.json`，并运行 `npm run api:generate && git diff --exit-code -- src/api-client` | 实时 OpenAPI、已提交 `Zane.Api.json`、`schema.ts` 的 paths 均为 `/api/v1/health`；生成后无 diff | 示例端点已排除在 OpenAPI 之外，不进入契约 |
+| 2026-11-07 | 阶段 1 出口 | G4 临时空库 `dotnet ef database update` → `sqlite3` 写入 → 新进程读取 | 迁移应用 `20261107065027_InitialCreate`；新进程读到 `阶段验收 / 持久化验证 / Draft` | 临时库位于系统临时目录，验收后未入库 |
+| 2026-11-07 | 阶段 1 出口 | G5 `curl /api/v1/health`（数据库可用 / 指向不存在目录） | 可用返回 `200` 与健康 JSON；不可用返回 `503`、`application/problem+json`、`数据库不可用，健康检查失败。` | 以不存在目录模拟数据库不可用 |
+| 2026-11-07 | 阶段 1 出口 | G6 `POST /api/v1/samples/echo`（空 message）与 `GET /api/v1/samples/throw`（Testing 环境） | 校验失败 `400`、异常 `500`，均为 `application/problem+json`，含 type/title/status/detail/traceId | Development 下异常由 DeveloperExceptionPage 处理，验收使用 Testing |
+| 2026-11-07 | 阶段 1 出口 | G7 检查 `docs/README.md` 链接、backlog、PRD-00、roadmap、changelog | 索引 55 条链接 0 缺失；修正 README 后端状态、backlog 与 PRD-00 的 PLAT 编号漂移；PLAT-01～07/09/11/12 为 done，08/13 planned，10 deferred；changelog 覆盖 S0–S5 | 修正内容已写入本次验收；`PLAT-08`（结构化日志/追踪）与 `PLAT-13`（备份导出）仍未实现 |
+| 2026-11-07 | 阶段 1 出口 | G8 复核 CI run [`42355472575`](https://github.com/warmthlee/zane/actions/runs/42355472575)；运行 `npm run release:rollback`；临时库备份→删除→恢复 | CI 4 个 job success；回滚脚本退出码 0，生成 `.ai/releases/rollback-plan.json`（4 步恢复清单 + latest-check）；数据回滚演练行数 `1 → 0 → 1`，记录恢复 | 未在生产服务器执行 L1/L2 回滚；其依赖服务器保留的上一份 `dist/` 与 publish 产物 |
 
 ## 风险与应对
 
