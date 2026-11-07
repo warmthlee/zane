@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
+    "api:generate": "dotnet build src-dotnet/Zane.Api/Zane.Api.csproj && npx --yes --package=typescript@5.9.3 --package=openapi-typescript@7.13.0 openapi-typescript src/api-client/Zane.Api.json -o src/api-client/schema.ts",
     "session:save": "node scripts/session-archive.mjs",
     "session:summary": "node scripts/session-archive.mjs --summary",
     "release:check": "node scripts/release-check.mjs",

@@ -82,7 +82,7 @@ dotnet run --project src-dotnet/Zane.Api
 ## 契约变更
 
 1. 修改服务端 DTO/端点。
-2. 重新生成 OpenAPI 与 `src/api-client`。
+2. 运行 `npm run api:generate` 重新生成 `src/api-client/Zane.Api.json` 与 `schema.ts`（生成器版本固定在脚本内，不手改生成物）。
 3. 前端使用生成类型适配。
 4. 契约变更与前后端同批发布。
 

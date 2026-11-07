@@ -78,6 +78,56 @@ mark {
   padding: 28px 24px 48px;
 }
 
+.backend-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+.backend-status p {
+  margin: 0;
+}
+
+.backend-status .eyebrow-alt {
+  margin: 0 0 2px;
+}
+
+.backend-status-dot {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--text-muted);
+}
+
+.backend-status.online .backend-status-dot {
+  background: #3f9c6b;
+}
+
+.backend-status.offline .backend-status-dot {
+  background: #c0563f;
+}
+
+.backend-status.loading .backend-status-dot {
+  animation: backend-status-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes backend-status-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .topbar {
   display: flex;
   align-items: center;

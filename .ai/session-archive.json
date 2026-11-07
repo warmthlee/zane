@@ -48,5 +48,15 @@
     "workspace": "F:\\source\\zane",
     "agent": "npm/11.16.0 node/v24.18.0 win32 x64 workspaces/false",
     "created_at": "2026-11-07 08:05:18"
+  },
+  {
+    "id": 6,
+    "timestamp": "2026-11-07T08:11:55.712Z",
+    "title": "S4 · 接通契约",
+    "status": "done",
+    "notes": "api:generate 连跑两次 md5 一致；后端 7 测试通过；前端 build/lint 通过；代理 /api/v1/health 200，停后端后 502 且页面不白屏；fetch 仅在 api-client/client.ts",
+    "workspace": "F:\\source\\zane",
+    "agent": "npm/11.16.0 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-07 08:11:55"
   }
 ]

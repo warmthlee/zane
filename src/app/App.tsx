@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { BackendStatus } from '@/components/layout/BackendStatus'
 import { SiteFooter } from '@/components/layout/SiteFooter'
 import { SiteHeader } from '@/components/layout/SiteHeader'
 import { PostCard } from '@/features/notes/components/PostCard'
@@ -315,6 +316,8 @@ function App() {
                 </div>
               </aside>
             </section>
+
+            <BackendStatus />
 
             <section className="category-section">
               <div className="section-heading">

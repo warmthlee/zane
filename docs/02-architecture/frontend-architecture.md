@@ -43,7 +43,8 @@ shadcn/ui 是组件的**来源**，不是运行时组件库：组件源码通过
 ## 契约与类型
 
 - 服务端 OpenAPI 3.1 是唯一契约来源。
-- `src/api-client` 由生成脚本产出（如 `openapi-typescript` 或 Kiota），纳入版本控制，不手改。
+- `src/api-client` 由生成脚本产出（当前为 `openapi-typescript`，命令 `npm run api:generate`），纳入版本控制，不手改。
+- `Zane.Api.json` 由后端构建时输出到 `src/api-client/`，`schema.ts` 是唯一类型来源；手写 `fetch` 只允许出现在 `client.ts` 封装内。
 - 前端不手写与服务端重复的 DTO。
 - 表单体验校验可用 Zod，但不得替代服务端校验。
 

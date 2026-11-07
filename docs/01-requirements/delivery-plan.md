@@ -53,7 +53,7 @@ Claude Code 中可直接用 `/step S1`，模板在 [`../../.claude/commands/step
 | S1 | 后端 walking skeleton | S0 | `src-dotnet/` 解决方案、健康检查、OpenAPI | PLAT-02、PLAT-05、PLAT-06 | done |
 | S2 | EF Core 最小模型 | S1 | `Note` 实体、`AppDbContext`、首个迁移 | PLAT-03 | done |
 | S3 | 前端工程化补齐 | S0 | Tailwind + shadcn/ui、`@/` 别名、目录重构 | PLAT-01、PLAT-11 | done |
-| S4 | 接通契约 | S1、S3 | `src/api-client` 生成、前端调用健康接口 | PLAT-04 | todo |
+| S4 | 接通契约 | S1、S3 | `src/api-client` 生成、前端调用健康接口 | PLAT-04 | done |
 | S5 | CI 与发布门禁 | S1、S4 | 前后端构建测试流水线 | PLAT-07 | todo |
 
 S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两者都完成。
@@ -233,7 +233,7 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | S1 | `src-dotnet/Zane.sln`（.sln 格式）、`Zane.Api`（`/api/v1/health`、`/openapi/v1.json`、ProblemDetails + `IExceptionHandler`、`AddValidation()` 示例端点）、`Zane.Api.Tests`（xUnit 5 条）、仓库级 `NuGet.Config`；`.gitignore` 移除 `*.sln`、忽略 `bin/`/`obj/` | 端口 5000；健康响应 `{status,service,checkedAtUtc}`；错误统一 `application/problem+json`；示例端点仅在非 Production 映射于 `/api/v1/samples/*`；`IDatabaseHealthProbe` 是数据库探针扩展点；`public partial class Program` 供测试宿主 | S2 注册 `AppDbContext` 并移除 `PlaceholderDatabaseHealthProbe`，让健康检查走真实数据库探针；连接串走配置；`dotnet ef` 工具可用 |
 | S2 | `Domain/Note.cs`（`Guid` v7、UTC `DateTimeOffset`、`TimeProvider`）、`Data/AppDbContext.cs`、`NoteConfiguration`、`SqlitePragmaInterceptor`、`DatabaseHealthProbe`、`Migrations/InitialCreate`；根目录 `dotnet-tools.json` 固定 `dotnet-ef` 10.0.14 | 表 `notes`（`id,title,content_md,status,created_at,updated_at,published_at`）；状态以字符串存 `Draft/Published/Archived`；时间统一 UTC；连接串键 `ConnectionStrings:Default`；`AddDataAccess()` 在解析 `DbContext` 时读配置；WAL / `foreign_keys=ON` / `busy_timeout=5000` 由连接拦截器应用；健康检查 `CanConnectAsync` 失败返回 503 | S2 完成，S3（前端）可独立开始；部署或本地运行前先 `dotnet ef database update`，否则健康检查 503；`dotnet ef` 为本地工具，克隆后需 `dotnet tool restore` |
 | S3 | Tailwind CSS v4（`@tailwindcss/vite`，仅 `theme` + `utilities` 层）、`@/` 别名（`vite.config.ts` + `tsconfig.app.json`）、shadcn/ui 初始化（`components.json`、`src/lib/utils.ts`）与 `button`/`card`/`input`；目录重构为 `src/app/`、`src/components/{layout,ui}/`、`src/features/notes/{components,content}/` 与 `data.ts`/`types.ts`/`utils.tsx`、`src/styles/{index.css,app.css}` | 路径别名 `@/` = `src/`；样式入口顺序 `index.css` → `app.css`，`app.css` 保持无 `@layer` 以覆盖 Tailwind 与 shadcn token；`--card/--border/--accent` 等同名 token 由 `app.css` 后加载胜出；不引入 Tailwind preflight，`@layer base` 仅保留 box-sizing/border 最小重置；shadcn 组件源码入库，`cn` 来自 `cn` 包 | S4 依赖 S1、S3 均完成；需要在 `src/api-client/` 生成类型并让前端调用 `/api/v1/health`；后端端口 5000，前端尚未配置 `/api` 代理，S4 一并处理 |
-| S4 | 待填写 | 待填写 | 待填写 |
+| S4 | `src/api-client/`：`Zane.Api.json`（后端构建时由 `Microsoft.Extensions.ApiDescription.Server` 输出）、`schema.ts`（`openapi-typescript` 生成）、`client.ts`（唯一 `fetch` 封装，含超时与 `ApiError`）；`npm run api:generate` 一条命令重建；首页新增 `BackendStatus` 展示加载/成功/失败；Vite dev 代理 `/api` → `http://localhost:5000` | 生成器为 `openapi-typescript@7.13.0`，因项目用 TypeScript 7，经 `npx` 同时固定 `typescript@5.9.3` 运行；生成物入库、不手改；API 基址 `VITE_API_BASE_URL`（默认为空，同源 `/api`）；HTTP 失败抛 `ApiError`（携带 ProblemDetails），网络失败由调用方捕获 | S5 需同时具备 .NET SDK 与 Node；CI 中 `npm run api:generate` 首次会联网拉取固定的 npx 包，并需校验生成后无 diff；生产由 Nginx 反代 `/api` 到后端 |
 | S5 | 待填写 | 待填写 | 待填写 |
 
 ## 验收记录
@@ -264,6 +264,14 @@ S2 与 S3 互不依赖，可放在不同会话里并行推进；S4 必须等两�
 | 2026-11-07 | S3 | `npm run dev` | `http://localhost:5173/` 启动成功并返回 200 | 无 |
 | 2026-11-07 | S3 | 视觉（本地 `npm run dev`） | 本机无可用无头截图（Edge headless 无输出、Playwright 浏览器 CDN 下载超时），改用 Vite SSR 渲染比对：改造前后首页 HTML **逐字节一致**（6833 字符）；`src/styles/app.css` 与改版前 `src/App.css` 逐字节一致；Tailwind 仅引入 theme/utilities，未引入会重置标题/列表/段落默认样式的 preflight | 建议人工再目视复核一次；页面视觉未做像素级截图回归 |
 | 2026-11-07 | S3 | 构建产物 CSS 层序 | 产物含 `@layer theme/base/components/utilities`；`:root` 中 `--card` 先为 shadcn `oklch`，后为 `app.css` 的 `#fffaf1`，旧主题 token 胜出 | 无 |
+| 2026-11-07 | S4 | `dotnet build src-dotnet/Zane.Api/Zane.Api.csproj` | 0 warning，0 error；`GenerateOpenApiDocuments` 输出 `src/api-client/Zane.Api.json`（OpenAPI 3.1.1，仅 `/api/v1/health`，无开发期 samples 端点） | 契约文件随普通 `dotnet build` 更新 |
+| 2026-11-07 | S4 | `npm run api:generate` | `dotnet build` 通过后生成 `schema.ts`（37ms）；连续两次生成后 `md5sum -c` 两个文件均为 `OK`，无 diff | 生成器固定 `openapi-typescript@7.13.0` + `typescript@5.9.3`（npx），因 Project TS 7 与生成器不兼容 |
+| 2026-11-07 | S4 | `dotnet build src-dotnet/Zane.sln` / `dotnet test src-dotnet/Zane.sln` | 构建 0 warning 0 error；测试失败 0，通过 7，总计 7 | 无 |
+| 2026-11-07 | S4 | `npm run build` / `npm run lint` | 构建通过（CSS 47.71 kB、JS 262.83 kB）；lint 退出码 0，仅既有 shadcn button 警告 | 无 |
+| 2026-11-07 | S4 | 联调：`dotnet run` + `npm run dev`，`curl http://localhost:5173/api/v1/health` | 代理返回 `200`，`{"status":"healthy","service":"zane-api","checkedAtUtc":"2026-11-07T08:10:23…"}`；首页 `200`；SSR 渲染含 `backend-status loading` 与“正在检测后端健康状态…” | 本机无无头浏览器，未做真实浏览器点击；代理、客户端与渲染分支分别验证 |
+| 2026-11-07 | S4 | 客户端在线/离线调用 | 在线返回健康 JSON；指向未监听端口时抛 `TypeError: fetch failed`，由 `BackendStatus` 捕获并切换错误态 | 同上 |
+| 2026-11-07 | S4 | 降级：停掉后端后请求 | 代理返回 `502`；前端页面仍返回 `200`（不白屏），组件进入错误态 | 无 |
+| 2026-11-07 | S4 | `grep -rn "fetch(" src --include=*.ts --include=*.tsx` | 仅 `src/api-client/client.ts:28` 一处手写 `fetch` | 无 |
 
 ## 风险与应对
 
