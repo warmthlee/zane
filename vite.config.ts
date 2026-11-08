@@ -12,6 +12,9 @@ export default defineConfig({
     },
   },
   server: {
+    // Windows 的 Hyper-V/WinNAT 会保留 5088–5187 等端口段，Vite 默认 5173 会 EACCES。
+    // 固定到未保留的 3000；被占用时 Vite 仍会自动顺延。
+    port: 3000,
     proxy: {
       // 本地联调把 /api 转发到 ASP.NET Core；生产由 Nginx 反代同名前缀。
       '/api': {
