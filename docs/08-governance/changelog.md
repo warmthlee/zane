@@ -18,7 +18,7 @@
 - 阶段 2 · P5 笔记列表与详情：`repository.ts` 扩展 `listNotes(params)` 与 `getNote(id)`（可中止延迟、`success/error/empty` 测试模式，顶部标注生成客户端替换点）；列表筛选全部进入 query params 并由 repository 查询，支持清除筛选；列表改为保留 query 的 `Link` 并高亮当前项；详情用 `getNote` 加载，具备骨架、错误重试、不存在空态，目录跳转带 `scroll-mt`，代码块增加复制按钮，上下篇复用筛选后的列表；列表与详情直接访问/刷新可用。
 - 阶段 2 · P6 分类/归档/文库/关于/作者：分类页接入 repository 并输出文章网格、标签统计与专栏链接；归档页按年份/分类/标签分组，模式写入 `group` query 且刷新保留；文库页改为收藏/草稿/在读三栏并补齐空态；404 与顶部导航改用共享组件和 `Link`，导航补齐 `aria-current` 高亮；删除未使用的 `archiveGroups`、`ArchiveGroup` 与 `.archive-tab` CSS；作者与关于保留独立路由。
 - 阶段 2 · P7 样式收口、测试与质量门禁：删除 `src/styles/app.css` 及其 import，页面与组件全部改用 Tailwind utility + `src/lib/styles.ts` 共享组合 + `index.css` 设计 token；收紧表面/眉题/胶囊样式并移除 `list-item` 等旧类名冲突；新增 Vitest 5 + jsdom + Testing Library 配置与 `npm run test` / `npm run test:run`，7 个测试文件，随阶段出口补充至 57 项，覆盖 repository 筛选、URL 参数、主题持久化、关键路由、空/错误态、语义与 aria、token 对比度、焦点与 reduced-motion；新增 `--brand-text` 并调整浅色 `--primary-foreground`，修复小字号强调文字与填充按钮的 WCAG AA 对比度；CI 前端 job 增加 `npm run test:run`；同步更新设计 token、测试策略与文档索引。
-- 阶段 2 · 出口验收 G1–G6：生产构建预览下验证 9 条路由、刷新/前进后退、4 条旧链接重定向、深浅主题 token、六类数据页面空/错误态、加载骨架与响应式；`posts` 收敛到 repository（新增 `countNotes`），站点静态元数据仍来自 `data.ts`；前端 57 项测试与后端 7 项测试通过。
+- 阶段 2 · 出口验收 G1–G6：生产构建预览下验证 9 条路由、刷新/前进后退、4 条旧链接重定向、深浅主题 token、六类数据页面空/错误态、加载骨架与响应式；`posts` 收敛到 repository（新增 `countNotes`），站点静态元数据仍来自 `data.ts`；前端 57 项测试与后端 7 项测试通过；分支 `feat/phase2-frontend-baseline` 推送后 CI [#42485253915](https://github.com/warmthlee/zane/actions/runs/42485253915) 四个任务全部 success。
 - `AGENTS.md`（中文跨 Agent 契约）与 `CLAUDE.md`（Claude Code 入口）。
 - shadcn/ui 作为唯一 UI 组件来源：CLI 加入 `src/components/ui/`，组件源码入库。
 - 阶段 1 · S0 固化文档基线：文档与协作契约按目录分组提交，工作区回到干净状态。
