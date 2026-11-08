@@ -16,11 +16,9 @@
 
 ## 当前状态
 
-仓库尚未接入后端项目，也没有 `dotnet test`；前端测试框架尚未接入。阶段 1 同步补上：
-
-- `dotnet test`（后端）。
-- `npm run test`（前端，待加脚本）。
-- `npm run test:e2e`（Playwright，待加脚本）。
+- 后端：`dotnet test` 已接入 `src-dotnet/Zane.Api.Tests`。
+- 前端：Vitest + jsdom + Testing Library 已接入（`npm run test` / `npm run test:run`），当前 7 个测试文件 57 项，覆盖 repository 筛选、URL 参数、主题持久化、关键路由与空/错误态；另有设计 token 对比度（正文、次要文字、强调文字、填充按钮）、焦点与 reduced-motion 检查。
+- 端到端：`npm run test:e2e`（Playwright）尚未接入，页面主流程暂由无头浏览器手工验收。
 
 ## 必须覆盖的路径
 
@@ -76,7 +74,7 @@
 ## CI 门槛
 
 1. 安装 Node 与 .NET SDK 10。
-2. 前端安装依赖、类型检查、构建、lint。
+2. 前端安装依赖、lint、`npm run test:run`、构建。
 3. 后端 `dotnet restore`、`dotnet build`、`dotnet test`。
 4. 端到端测试（可 nightly 或发布前执行）。
 

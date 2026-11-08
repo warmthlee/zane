@@ -68,5 +68,75 @@
     "workspace": "F:\\source\\zane",
     "agent": "npm/11.16.0 node/v24.18.0 win32 x64 workspaces/false",
     "created_at": "2026-11-07 08:31:06"
+  },
+  {
+    "id": 8,
+    "timestamp": "2026-11-08T06:48:38.206Z",
+    "title": "P1 · 路由骨架与页面拆分",
+    "status": "done",
+    "notes": "build 62 modules 1.48s；lint 0（仅既有 button 警告）；9 条路由无头渲染 PASS；前进/后退 PASS；旧链接重定向 PASS",
+    "workspace": "D:\\source\\zane",
+    "agent": "npm/12.2.2 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-08 06:48:38"
+  },
+  {
+    "id": 9,
+    "timestamp": "2026-11-08T11:20:38.487Z",
+    "title": "P2 · 设计系统与主题基线",
+    "status": "done",
+    "notes": "build 182 modules 1.05s；lint 仅既有 button.tsx:66 警告；CDP 全 PASS：body/旧卡片/shadcn Card、Button、Input 随 .dark 联动，主题持久化且尊重 prefers-color-scheme，focus-visible 2px 可见，reduced-motion 生效；token 审计无新增硬编码主色",
+    "workspace": "D:\\source\\zane",
+    "agent": "npm/12.2.2 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-08 11:20:38"
+  },
+  {
+    "id": 10,
+    "timestamp": "2026-11-08T11:38:19.597Z",
+    "title": "P3 · 通用页面组件与数据状态",
+    "status": "done",
+    "notes": "build 194 modules 1.28s；lint 仅既有 button.tsx:66 警告；CDP 全 PASS：health 请求暂停验证 loading 骨架、502 验证 ErrorState+重新检测、/notes?q=__no_match__ 验证 EmptyState+清除筛选；深浅主题 pill/PageHeader 联动；Tab 焦点可见、Enter 触发筛选 mode=year",
+    "workspace": "D:\\source\\zane",
+    "agent": "npm/12.2.2 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-08 11:38:19"
+  },
+  {
+    "id": 11,
+    "timestamp": "2026-11-08T11:49:19.615Z",
+    "title": "P4 · 首页/工作台",
+    "status": "done",
+    "notes": "build 195 modules 999ms; lint 0; CDP 1280/768/375 无横向滚动; Tab/Enter 文章、分类、主题通过; error/empty/loading 三态通过",
+    "workspace": "D:\\source\\zane",
+    "agent": "npm/12.2.2 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-08 11:49:19"
+  },
+  {
+    "id": 12,
+    "timestamp": "2026-11-08T12:08:55.814Z",
+    "title": "P5 · 笔记列表与详情",
+    "status": "done",
+    "notes": "build 195 modules 1.22s；lint 0；深链刷新、组合筛选刷新/后退、列表/详情三态与重试、TOC/复制/上下篇、Tab+Enter 均通过",
+    "workspace": "D:\\source\\zane",
+    "agent": "npm/12.2.2 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-08 12:08:55"
+  },
+  {
+    "id": 13,
+    "timestamp": "2026-11-08T12:29:00.750Z",
+    "title": "P6 · 分类/归档/文库/关于/作者",
+    "status": "done",
+    "notes": "build 195 modules 1.19s；lint 0；D1 全路由与 404 通过；导航 aria-current 与高亮正确；分类 3 卡/9 标签、归档 year/category/tag 刷新保留、文库 1/1/3 与空态 0/0/0、1280/768/375 无横向溢出；ViewMode/activeView 无结果",
+    "workspace": "D:\\source\\zane",
+    "agent": "npm/12.2.2 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-08 12:29:00"
+  },
+  {
+    "id": 14,
+    "timestamp": "2026-11-08T13:09:41.672Z",
+    "title": "P7 · 样式收口、测试与质量门禁",
+    "status": "done",
+    "notes": "app.css 删除且零引用；Vitest 7 文件 55 项通过；build 196 modules/CSS 48.79kB/JS 439.18kB；lint 退出码 0；CDP 9 路由+主流程+可访问性+响应式 ALL PASS；token 对比度 16 项覆盖两主题；CI 已加 test:run（未推送验证）",
+    "workspace": "D:\\source\\zane",
+    "agent": "npm/12.2.2 node/v24.18.0 win32 x64 workspaces/false",
+    "created_at": "2026-11-08 13:09:41"
   }
 ]

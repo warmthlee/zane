@@ -22,7 +22,9 @@
 | `text` | `#2D2A27` | 正文 |
 | `text-muted` | `#5F5A56` | 次要信息 |
 | `border` | `#E7DED2` | 分隔线 |
-| `accent` | `#C7774E` | 主强调 |
+| `accent` | `#C7774E` | 主强调（填充、图标与装饰） |
+| `accent-foreground`（`--primary-foreground`） | `#1E1B1A` | 填充上的文字（对比度 ≥ 4.5:1） |
+| `accent-text`（`--brand-text`） | `#8F4F2E` | 小字号强调文字（浅色底上对比度 ≥ 4.5:1） |
 | `accent-soft` | `#F3E0D5` | 强调背景 |
 | `code-bg` | `#F5EFE8` | 代码块 |
 
@@ -35,7 +37,9 @@
 | `text` | `#F3EAE1` | 正文 |
 | `text-muted` | `#C5B8AF` | 次要信息 |
 | `border` | `#3D352F` | 分隔线 |
-| `accent` | `#D39B75` | 主强调 |
+| `accent` | `#D39B75` | 主强调（填充、图标与装饰） |
+| `accent-foreground`（`--primary-foreground`） | `#1E1B1A` | 填充上的文字（对比度 ≥ 4.5:1） |
+| `accent-text`（`--brand-text`） | `#D39B75` | 小字号强调文字（深色底上对比度 ≥ 4.5:1） |
 | `accent-soft` | `#47362D` | 强调背景 |
 | `code-bg` | `#1B1918` | 代码块 |
 

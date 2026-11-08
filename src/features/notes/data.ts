@@ -1,5 +1,5 @@
 import { postMarkdownContent } from './content/postContent'
-import type { ArchiveGroup, ContentCategory, Post, Section } from './types'
+import type { ContentCategory, Post, Section } from './types'
 
 export const parseMarkdown = (markdown: string): Section[] => {
   return markdown
@@ -197,21 +197,4 @@ export const allYears = Array.from(new Set(posts.map((post) => new Date(post.dat
 export const socials = [
   { label: 'Email', href: 'mailto:hello@zane.blog' },
   { label: 'GitHub', href: 'https://github.com/warmthlee' },
-  { label: 'RSS', href: '#rss' },
-  { label: 'Newsletter', href: '#newsletter' },
 ]
-
-export const archiveGroups: ArchiveGroup[] = Array.from(
-  posts.reduce((map, post) => {
-    const year = String(new Date(post.date).getFullYear())
-    const yearPosts = map.get(year) ?? []
-    yearPosts.push(post)
-    map.set(year, yearPosts)
-    return map
-  }, new Map<string, Post[]>()),
-)
-  .map(([year, yearPosts]) => ({
-    year,
-    posts: [...yearPosts].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
-  }))
-  .sort((a, b) => Number(b.year) - Number(a.year))
