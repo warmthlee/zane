@@ -1,10 +1,12 @@
 # /step
 
-按交付计划执行阶段 1 的单个步骤。用法：`/step S1`。
+按交付计划执行单个步骤。用法：`/step S1`（阶段 1）或 `/step P1`（阶段 2 前端页面）。
 
 ## 读取顺序
 
-1. `docs/01-requirements/delivery-plan.md`：总览、该步骤任务、验收表、交接摘要。
+1. 按步骤前缀选择计划，阅读总览、该步骤任务、验收表与交接摘要：
+   - `S*` → `docs/01-requirements/delivery-plan.md`
+   - `P*` → `docs/01-requirements/delivery-plan-phase2.md`
 2. `AGENTS.md` 与 `CLAUDE.md`：命令、架构与边界。
 3. 上一个步骤的交接摘要行：已定契约与前置。
 
@@ -15,7 +17,7 @@
 3. 只做该步骤「任务」清单内的事；范围外发现记录到验收记录的「遗留」列。
 4. 按验收表逐条执行命令，保留真实输出；不通过就返工，不改结论。
 5. 更新状态、验收记录与交接摘要三行。
-6. 归档：`npm run session:save -- "S<id> · <主题>" <done|blocked> "<证据摘要>"`。
+6. 归档：`npm run session:save -- "<步骤 ID> · <主题>" <done|blocked> "<证据摘要>"`，例如 `P1 · 路由骨架与页面拆分`。
 
 ## 规则
 

@@ -91,6 +91,7 @@ git push -u origin feat/note-search
 
 | 现象 | 排查 |
 | --- | --- |
+| `npm run dev` 报 `EACCES: permission denied ::1:5173` | Windows Hyper-V/WinNAT 保留了 5088–5187 端口段；Vite 已固定到未保留的 3000（见 `vite.config.ts`），用 `netsh interface ipv4 show excludedportrange protocol=tcp` 查看本机保留段 |
 | 页面空白 | 构建产物、控制台错误、API 基地址 |
 | API 502 | .NET 进程是否存活、Kestrel 地址、Nginx 反代 |
 | API 400 | DataAnnotations 校验、ProblemDetails 字段错误 |
