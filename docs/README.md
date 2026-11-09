@@ -2,7 +2,7 @@
 
 本目录覆盖 Zane Playground 的完整生命周期：立项、需求、架构、设计、开发、质量、发布、运营、治理与参考。文档是项目事实来源，优先于聊天记录。
 
-> 状态说明：文档描述目标形态；前端 `src/`、后端 `src-dotnet/` 与生成客户端 `src/api-client/` 已建立。阶段 1 执行进度见 [`01-requirements/delivery-plan.md`](01-requirements/delivery-plan.md)，前端页面阶段见 [`01-requirements/delivery-plan-phase2.md`](01-requirements/delivery-plan-phase2.md)，路线状态见 [`01-requirements/roadmap.md`](01-requirements/roadmap.md)。
+> 状态说明：文档描述目标形态；前端 `src/`、后端 `src-dotnet/` 与生成客户端 `src/api-client/` 已建立。阶段 1 执行进度见 [`01-requirements/delivery-plan.md`](01-requirements/delivery-plan.md)，前端页面阶段见 [`01-requirements/delivery-plan-phase2.md`](01-requirements/delivery-plan-phase2.md)，首页与全局入口迭代见 [`01-requirements/delivery-plan-phase3.md`](01-requirements/delivery-plan-phase3.md)，路线状态见 [`01-requirements/roadmap.md`](01-requirements/roadmap.md)。
 >
 > 前端质量基线：`npm run build`、`npm run lint`、`npm run test:run`（Vitest + Testing Library + jsdom，当前 7 个文件 57 项）；样式只依赖 `src/styles/index.css` 的设计 token 与 Tailwind utility，不再引用已删除的 `app.css`。测试策略见 [`05-quality/test-strategy.md`](05-quality/test-strategy.md)。
 
@@ -42,6 +42,7 @@
 | [`01-requirements/roadmap.md`](01-requirements/roadmap.md) | 阶段路线与迁移计划 |
 | [`01-requirements/delivery-plan.md`](01-requirements/delivery-plan.md) | 阶段 1 步骤 0–5、分步验收与出口门禁 |
 | [`01-requirements/delivery-plan-phase2.md`](01-requirements/delivery-plan-phase2.md) | 阶段 2 前端页面 P0–P7、分步验收与阶段出口 |
+| [`01-requirements/delivery-plan-phase3.md`](01-requirements/delivery-plan-phase3.md) | 阶段 3 首页与全局入口 H0–H6、决策、分步验收与出口门禁 |
 
 ### 分模块 PRD
 

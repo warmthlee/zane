@@ -11,6 +11,7 @@
 - 独立 ADR：`docs/08-governance/adr/`（ADR-001～009）。
 - 阶段 1 交付计划：`docs/01-requirements/delivery-plan.md`（步骤 S0–S5、分步验收与出口门禁）。
 - 阶段 2 前端页面交付计划：`docs/01-requirements/delivery-plan-phase2.md`（步骤 P0–P7、分步验收与阶段出口）。
+- 阶段 3 首页与全局入口交付计划：`docs/01-requirements/delivery-plan-phase3.md`（步骤 H0–H6、混合式首页、六模块导航、主题三态、模块落地页与出口门禁 GH1–GH6）。
 - 阶段 2 · P1 路由骨架：React Router 7 路由化，页面拆分到 `src/pages/`，筛选与归档模式进入 URL，旧 hash/query 链接归一化；`/step` 支持 `P*` 步骤。
 - 阶段 2 · P2 设计系统与主题基线：`index.css` 对齐设计 token 与 `.dark`，`app.css` 改为引用 token；引入 Redux Toolkit 承载主题与文库默认筛选，主题持久化并尊重 `prefers-color-scheme`；Header/Footer、首页台账与笔记搜索接入 shadcn `Button` / `Card` / `Input`；补充 `:focus-visible` 与 `prefers-reduced-motion`。
 - 阶段 2 · P3 通用页面组件与数据状态：新增 `PageHeader`、`SectionHeader`、`EmptyState`、`ErrorState`、`LoadingSkeleton`、`TagPill`、`SearchField`、`FilterTabs`；新增 `useAsyncData` 与统一 `AsyncState` / `AsyncError`，health 请求接入 loading/error/retry，笔记筛选空态提供「清除筛选」下一步。
