@@ -52,6 +52,32 @@
 | danger | `#B4553F` | `#D98A74` | 错误、失败 |
 | info | `#7E90AD` | `#A7B7CF` | 提示、说明 |
 
+### 贡献日历色阶
+
+想法日历使用品牌橙。每一档必须同时满足“相邻档可区分”和“同主题内文字/背景对比度不劣化”；颜色不是唯一信息载体。
+
+| Token | 浅色 | 深色 | 条件 |
+| --- | --- | --- | --- |
+| `--heatmap-memo-0` | `#EEE6DE` | `#332B26` | 0 条 |
+| `--heatmap-memo-1` | `#F3D3BF` | `#4A3327` | 1 条 |
+| `--heatmap-memo-2` | `#E7A97F` | `#6E4630` | 2 条 |
+| `--heatmap-memo-3` | `#D77F4F` | `#9A5F3A` | 3–4 条 |
+| `--heatmap-memo-4` | `#B85C2E` | `#C77F52` | ≥5 条 |
+
+未来新增日历类型时使用独立 token，不复用想法色阶：
+
+| 类型 | Token 前缀 | 状态 |
+| --- | --- | --- |
+| 想法 | `--heatmap-memo-*` | 阶段 3 |
+| 文章 | `--heatmap-article-*` | 未来（PLAT-14） |
+| 工具 | `--heatmap-tool-*` | 未来（PLAT-14） |
+
+组件通过 `tone` 选择 token 前缀；组件内部不写死颜色：
+
+```tsx
+<ContributionCalendar tone="memo" days={days} />
+```
+
 ## 字体与排版
 
 - 中文：Noto Sans SC / PingFang SC。
@@ -81,6 +107,7 @@
 - 设计 token 映射为 shadcn 的 CSS 变量（如 `--background`、`--foreground`、`--primary`、`--border`），组件通过语义变量取色。
 - 主题切换使用 `dark` class；不得在组件内写死颜色。
 - 需要变体时优先使用 `cva` 风格扩展，不改动组件的可访问性语义。
+- 领域组件（如 `ContributionCalendar`）用 Tailwind token 组合实现，不替代 shadcn 的基础交互组件；新增基础交互仍优先走 shadcn。
 
 ## 组件规范
 
@@ -89,8 +116,9 @@
 | 按钮 | 主/次/危险三级；hover 与 focus 柔和过渡 |
 | 卡片 | 轻边框 + 轻阴影；不使用重投影 |
 | 输入框 | 明确的 focus 环；错误态显示文案 |
-| 标签 | 小尺寸、低饱和；可点击筛选 |
+| 标签 | 小尺寸、低饱和；可点击筛选；想法标签显示保留 `#...#` 外形 |
 | 代码块 | 等宽字体、浅背景、复制按钮 |
+| 贡献日历 | 7×52 网格、5 档色阶、图例与摘要；移动端容器内部横向滚动；格子有 `title`，整块有 `aria-label` |
 | 空状态 | 说明原因与下一步动作 |
 | 加载态 | 骨架屏优先于全屏 spinner |
 | 提示 | 行内提示优先，toast 仅用于全局结果 |

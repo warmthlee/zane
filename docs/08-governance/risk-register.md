@@ -18,8 +18,11 @@
 | R-12 | EF Core 迁移失败或不可逆 | 中 | 高 | 副本演练、两步迁移、发布前备份 | open |
 | R-13 | SQLite 时间处理（UTC/本地）不一致 | 中 | 中 | 统一 UTC、`TimeProvider`、展示层转换、测试覆盖 | open |
 | R-14 | .NET 10 / EF Core 10 生态兼容性（库、工具） | 中 | 中 | 选型前验证、锁定版本、CI 覆盖 | open |
-| R-15 | 鉴权缺失导致写接口误暴露 | 中 | 高 | 仅本机/内网、Nginx 白名单、上线前必须补鉴权 | open |
+| R-15 | 鉴权缺失导致写接口误暴露 | 中 | 高 | 仅本机/内网、Nginx 白名单；Memos 额外共享口令；上线前必须补鉴权 | open |
 | R-16 | Native AOT 相关限制影响发布 | 低 | 低 | 初期不启用（ADR-009） | accepted |
+| R-17 | Memos 共享口令泄露，任意持有者可修改全部想法 | 中 | 高 | 请求头传输、不写日志/URL/`localStorage`、限流、网络限制；未来 MEMO-11 用用户鉴权替换（ADR-010） | open |
+| R-18 | 想法日历按 UTC/本地日期聚合错误，跨日记录归错格子 | 中 | 中 | 统一 UTC 存储、`Site:TimeZone` 分组、固定 `TimeProvider` 测试跨日边界 | open |
+| R-19 | Markdown 文章渲染引入 XSS | 低 | 高 | 不启用原始 HTML、`react-markdown` 默认转义、外链 `rel="noreferrer"` | open |
 
 ## 维护规则
 

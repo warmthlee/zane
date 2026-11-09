@@ -16,8 +16,8 @@
 
 ## 当前状态
 
-- 后端：`dotnet test` 已接入 `src-dotnet/Zane.Api.Tests`。
-- 前端：Vitest + jsdom + Testing Library 已接入（`npm run test` / `npm run test:run`），当前 7 个测试文件 57 项，覆盖 repository 筛选、URL 参数、主题持久化、关键路由与空/错误态；另有设计 token 对比度（正文、次要文字、强调文字、填充按钮）、焦点与 reduced-motion 检查。
+- 后端：`dotnet test` 已接入 `src-dotnet/Zane.Api.Tests`；阶段 3 增加 Memos 领域、端点、迁移与日历聚合测试。
+- 前端：Vitest + jsdom + Testing Library 已接入（`npm run test` / `npm run test:run`），当前 7 个测试文件 57 项，覆盖 repository 筛选、URL 参数、主题持久化、关键路由与空/错误态；另有设计 token 对比度（正文、次要文字、强调文字、填充按钮）、焦点与 reduced-motion 检查。阶段 3 增加想法流、口令、日历与 Markdown 渲染测试。
 - 端到端：`npm run test:e2e`（Playwright）尚未接入，页面主流程暂由无头浏览器手工验收。
 
 ## 必须覆盖的路径
@@ -28,6 +28,21 @@
 - 标签筛选 + 关键词检索组合。
 - 草稿自动保存与离开提醒。
 - 导出内容完整。
+
+### 想法流
+
+- 标签解析：`#养花#`、`#技术/React#`、连续标签、重复标签、非法空格、超长标签、标签数量上限。
+- 创建、编辑、软删除；删除后列表与日历排除。
+- 口令：正确、缺失、错误、未配置、限流 401/429/503。
+- 时间线游标分页：无重复、无遗漏、标签筛选。
+- 日历：站点时区跨 UTC 日期、52 周边界、未来日期 0、`total`/`maxCount`。
+- 前端：未解锁/解锁流程、401 清除会话、提交中禁用、空/错误状态、日历 5 档与移动端滚动。
+
+### 文章 Markdown
+
+- 标题、列表、表格、引用、链接与代码块渲染。
+- 目录锚点、重复标题、代码复制按钮。
+- 原始 HTML 不被执行。
 
 ### 工具
 

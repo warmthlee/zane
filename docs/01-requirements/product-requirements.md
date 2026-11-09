@@ -7,7 +7,7 @@
 | PRD | 主题 | 当前状态 | 主要阶段 |
 | --- | --- | --- | --- |
 | [PRD-00](prd/prd-00-platform.md) | 平台基础（.NET 10 + EF Core） | planned | 阶段 1 |
-| [PRD-01](prd/prd-01-notes.md) | 思想记录 | planned | 阶段 1（社交分发延后） |
+| [PRD-01](prd/prd-01-notes.md) | 文章与长文记录 | planned | 阶段 1；阶段 3 补充静态文章渲染（社交分发延后） |
 | [PRD-02](prd/prd-02-tools.md) | 在线工具 | planned | 阶段 2 |
 | [PRD-03](prd/prd-03-playground.md) | 创意 MVP 游乐场 | planned | 阶段 5 |
 | [PRD-04](prd/prd-04-patterns.md) | 最佳实践 | planned | 阶段 3 |
@@ -15,6 +15,7 @@
 | [PRD-06](prd/prd-06-integrations.md) | 第三方工具集成 | planned | 阶段 4 |
 | [PRD-07](prd/prd-07-cheatsheets.md) | Cheat Sheet | planned | 阶段 2 |
 | [PRD-08](prd/prd-08-non-functional.md) | 非功能需求 | planned | 全阶段 |
+| [PRD-09](prd/prd-09-memos.md) | 想法流（Memos） | planned | 阶段 3 |
 
 ## 技术基线
 
@@ -28,7 +29,9 @@
 | 能力 | 原因 | 关联 |
 | --- | --- | --- |
 | 用户鉴权 | 个人使用，早期先跑通内容能力 | ADR-007 |
+| 想法按用户隔离与所有者权限 | 依赖用户鉴权；当前使用共享口令 | MEMO-11 / ADR-010 |
 | 社交平台一键分发 | 依赖平台 API、审核与限流 | ADR-008 |
+| 文章元数据迁移到 frontmatter | 阶段 3 先完成首页与渲染 | NOTE-14 |
 
 延后能力在 PRD 中保留需求描述，但状态为 `deferred`，不进入当前验收。
 

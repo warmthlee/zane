@@ -21,8 +21,9 @@
 | PLAT-11 | 前端组件基线：Tailwind + shadcn/ui | P1 | done | PLAT-01 |
 | PLAT-12 | CI 与发布门禁 | P0 | done | PLAT-01～PLAT-09 |
 | PLAT-13 | 数据库备份与内容导出脚本 | P1 | planned | PLAT-03 |
+| PLAT-14 | 通用贡献日历多色扩展（想法/文章/工具独立色系） | P2 | planned | MEMO-05 |
 
-## 思想记录（PRD-01）
+## 文章与长文记录（PRD-01）
 
 | ID | 功能 | 优先级 | 状态 | 依赖 |
 | --- | --- | --- | --- | --- |
@@ -33,6 +34,27 @@
 | NOTE-05 | 导出 Markdown/JSON | P1 | planned | NOTE-01 |
 | NOTE-10 | 同步目标配置 | — | deferred | ADR-008 |
 | NOTE-11 | 一键同步与重试 | — | deferred | ADR-008 |
+| NOTE-13 | 文章正文完整 Markdown 渲染（静态） | P1 | planned | — |
+| NOTE-14 | 文章元数据迁移到 frontmatter | P1 | planned | NOTE-13 |
+
+短想法不归入本表，见下方“想法流（PRD-09）”；`notes` 与 `memos` 是两套独立数据模型。
+
+## 想法流（PRD-09）
+
+| ID | 功能 | 优先级 | 状态 | 依赖 |
+| --- | --- | --- | --- | --- |
+| MEMO-01 | 创建想法（纯文本 1–500 字） | P0 | planned | PLAT-03 |
+| MEMO-02 | 编辑想法并重新解析标签 | P0 | planned | MEMO-01 |
+| MEMO-03 | 软删除想法与二次确认 | P0 | planned | MEMO-01 |
+| MEMO-04 | `#标签#` 解析、去重与标签筛选 | P0 | planned | MEMO-01 |
+| MEMO-05 | 想法日历（最近 52 周聚合） | P0 | planned | MEMO-01 |
+| MEMO-06 | 共享口令保护写操作 | P0 | planned | MEMO-01 |
+| MEMO-07 | 时间线游标分页 | P0 | planned | MEMO-01 |
+| MEMO-08 | 想法加载/空/错误/提交中状态 | P0 | planned | MEMO-01 |
+| MEMO-09 | 口令会话与 401 清除 | P0 | planned | MEMO-06 |
+| MEMO-10 | 日历图例、摘要与可访问性 | P1 | planned | MEMO-05 |
+| MEMO-11 | 用户鉴权与每条想法归属 | — | deferred | ADR-007 |
+| MEMO-12 | 想法批量导出/备份 | — | deferred | PLAT-13 |
 
 ## 在线工具（PRD-02）
 

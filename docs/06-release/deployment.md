@@ -87,6 +87,9 @@ ExecStart=/usr/bin/dotnet /opt/zane/api/Zane.Api.dll
 Restart=always
 Environment=ASPNETCORE_URLS=http://127.0.0.1:5080
 Environment=ConnectionStrings__Default=Data Source=/var/lib/zane/zane.db
+Environment=Site__TimeZone=Asia/Shanghai
+# 密钥放在权限受限的 EnvironmentFile 中，不要写进单元文件或仓库
+EnvironmentFile=/etc/zane/zane.env
 
 [Install]
 WantedBy=multi-user.target
@@ -100,8 +103,9 @@ Nginx / 1Panel
   └── /api/*       → http://127.0.0.1:5080
 ```
 
-- 写接口在鉴权落地前通过 Nginx 白名单/VPN/内网限制。
-- 传递 `X-Forwarded-For` 与 `X-Forwarded-Proto`。
+- 写接口在鉴权落地前通过 Nginx 白名单/VPN/内网限制；Memos 额外要求 `X-Memo-Passphrase`，但口令不能替代网络限制。
+- `POST/PATCH/DELETE /api/v1/memos*` 只允许受信来源；`GET` 可公开读。
+- 传递 `X-Forwarded-For` 与 `X-Forwarded-Proto`，供限流按真实来源 IP 统计。
 - 配置请求体大小与超时。
 
 ## SQLite 持久化
@@ -114,10 +118,12 @@ Nginx / 1Panel
 
 ## 配置与密钥
 
-- 环境变量使用双下划线映射：`ConnectionStrings__Default`。
-- 密钥通过服务器环境或密钥管理注入，不写入仓库。
+- 环境变量使用双下划线映射：`ConnectionStrings__Default`、`Memos__Passphrase`、`Site__TimeZone`。
+- `Memos__Passphrase` 最小长度 8，生产必须配置；缺失时写接口与 `unlock` 返回 503，只允许只读。
+- `Site__TimeZone` 默认 `Asia/Shanghai`；使用 IANA 时区名，启动时校验，无效则启动失败。
+- 密钥通过服务器环境或密钥管理注入，不写入仓库、日志或前端构建产物。
 - 不同环境使用独立数据库与配置。
-- 密钥轮换后重启服务并验证。
+- 口令轮换后重启服务并验证；轮换会使所有前端已保存的会话口令失效，需要重新解锁。
 
 ## 发布顺序
 

@@ -43,12 +43,19 @@ src-dotnet/Zane.Api（.NET 10 Minimal APIs）
 
 ## 关键数据流
 
-### 记录
+### 文章与长文记录
 
 1. 前端提交 JSON → Minimal API 校验（`AddValidation()`）。
 2. Handler 通过 EF Core 写入 `notes` / `note_tags`。
 3. 返回 `TypedResults.Created` 或 `TypedResults.Ok`。
 4. 前端用生成的客户端类型解析响应。
+
+### 想法流
+
+1. 前端 `POST/PATCH/DELETE /api/v1/memos`，请求头携带 `X-Memo-Passphrase`。
+2. 服务端先校验共享口令与限流，再校验正文与标签；标签写入 `memo_tags`。
+3. 读取 `/api/v1/memos` 走游标分页；`/api/v1/memos/calendar` 按 `Site:TimeZone` 聚合 52 周。
+4. 删除使用 `deleted_at` 软删除，默认查询过滤器排除。
 
 ### 热点聚合
 
@@ -67,7 +74,7 @@ src-dotnet/Zane.Api（.NET 10 Minimal APIs）
 
 | 关注点 | 方案 |
 | --- | --- |
-| 鉴权 | 当前延后（ADR-007）；写接口仅本机/内网开放 |
+| 鉴权 | 当前延后（ADR-007）；写接口仅本机/内网开放；Memos 额外共享口令（ADR-010） |
 | 校验 | .NET 10 内置 Minimal API 校验 + DataAnnotations |
 | 错误处理 | ProblemDetails + `IExceptionHandler`，统一错误码 |
 | 日志 | 结构化日志，含请求 ID、耗时、错误码 |

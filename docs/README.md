@@ -2,7 +2,7 @@
 
 本目录覆盖 Zane Playground 的完整生命周期：立项、需求、架构、设计、开发、质量、发布、运营、治理与参考。文档是项目事实来源，优先于聊天记录。
 
-> 状态说明：文档描述目标形态；前端 `src/`、后端 `src-dotnet/` 与生成客户端 `src/api-client/` 已建立。阶段 1 执行进度见 [`01-requirements/delivery-plan.md`](01-requirements/delivery-plan.md)，前端页面阶段见 [`01-requirements/delivery-plan-phase2.md`](01-requirements/delivery-plan-phase2.md)，首页与全局入口迭代见 [`01-requirements/delivery-plan-phase3.md`](01-requirements/delivery-plan-phase3.md)，路线状态见 [`01-requirements/roadmap.md`](01-requirements/roadmap.md)。
+> 状态说明：文档描述目标形态；前端 `src/`、后端 `src-dotnet/` 与生成客户端 `src/api-client/` 已建立。阶段 1 执行进度见 [`01-requirements/delivery-plan.md`](01-requirements/delivery-plan.md)，前端页面阶段见 [`01-requirements/delivery-plan-phase2.md`](01-requirements/delivery-plan-phase2.md)，首页、想法流与全局入口迭代见 [`01-requirements/delivery-plan-phase3.md`](01-requirements/delivery-plan-phase3.md)，想法流需求见 [`01-requirements/prd/prd-09-memos.md`](01-requirements/prd/prd-09-memos.md)，路线状态见 [`01-requirements/roadmap.md`](01-requirements/roadmap.md)。
 >
 > 前端质量基线：`npm run build`、`npm run lint`、`npm run test:run`（Vitest + Testing Library + jsdom，当前 7 个文件 57 项）；样式只依赖 `src/styles/index.css` 的设计 token 与 Tailwind utility，不再引用已删除的 `app.css`。测试策略见 [`05-quality/test-strategy.md`](05-quality/test-strategy.md)。
 
@@ -42,7 +42,7 @@
 | [`01-requirements/roadmap.md`](01-requirements/roadmap.md) | 阶段路线与迁移计划 |
 | [`01-requirements/delivery-plan.md`](01-requirements/delivery-plan.md) | 阶段 1 步骤 0–5、分步验收与出口门禁 |
 | [`01-requirements/delivery-plan-phase2.md`](01-requirements/delivery-plan-phase2.md) | 阶段 2 前端页面 P0–P7、分步验收与阶段出口 |
-| [`01-requirements/delivery-plan-phase3.md`](01-requirements/delivery-plan-phase3.md) | 阶段 3 首页与全局入口 H0–H6、决策、分步验收与出口门禁 |
+| [`01-requirements/delivery-plan-phase3.md`](01-requirements/delivery-plan-phase3.md) | 阶段 3 首页、想法流与全局入口 H0–H6、决策、分步验收与出口门禁 |
 
 ### 分模块 PRD
 
@@ -51,7 +51,7 @@
 | 文档 | 内容 |
 | --- | --- |
 | [`prd/prd-00-platform.md`](01-requirements/prd/prd-00-platform.md) | 平台基线：.NET 10 API、EF Core、健康检查、OpenAPI |
-| [`prd/prd-01-notes.md`](01-requirements/prd/prd-01-notes.md) | 思想记录：CRUD、标签、搜索、导出 |
+| [`prd/prd-01-notes.md`](01-requirements/prd/prd-01-notes.md) | 文章与长文记录：CRUD、标签、搜索、导出、静态 Markdown 渲染 |
 | [`prd/prd-02-tools.md`](01-requirements/prd/prd-02-tools.md) | 在线工具：二维码、Base64、ASCII |
 | [`prd/prd-03-playground.md`](01-requirements/prd/prd-03-playground.md) | 创意 MVP：注册表、状态、独立路由 |
 | [`prd/prd-04-patterns.md`](01-requirements/prd/prd-04-patterns.md) | 最佳实践：设计模式案例结构 |
@@ -59,6 +59,7 @@
 | [`prd/prd-06-integrations.md`](01-requirements/prd/prd-06-integrations.md) | 工具集成：Excalidraw |
 | [`prd/prd-07-cheatsheets.md`](01-requirements/prd/prd-07-cheatsheets.md) | Cheat Sheet：检索与复制 |
 | [`prd/prd-08-non-functional.md`](01-requirements/prd/prd-08-non-functional.md) | 非功能需求：性能、可用性、安全、数据 |
+| [`prd/prd-09-memos.md`](01-requirements/prd/prd-09-memos.md) | 想法流：短记录、`#标签#`、口令保护、想法日历 |
 
 ## 02 · 架构与技术
 
@@ -132,6 +133,7 @@
 | [`adr/ADR-007-auth-deferred.md`](08-governance/adr/ADR-007-auth-deferred.md) | 用户鉴权延后 |
 | [`adr/ADR-008-social-sync-deferred.md`](08-governance/adr/ADR-008-social-sync-deferred.md) | 社交平台分发延后 |
 | [`adr/ADR-009-native-aot-deferred.md`](08-governance/adr/ADR-009-native-aot-deferred.md) | 初期不启用 Native AOT |
+| [`adr/ADR-010-memo-passphrase.md`](08-governance/adr/ADR-010-memo-passphrase.md) | 想法流共享口令保护写操作 |
 
 ## 09 · 参考
 

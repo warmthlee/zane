@@ -13,7 +13,7 @@ src/
   components/
     ui/               # shadcn/ui 组件（项目自有代码，纳入版本控制）
     layout/           # 布局、导航、页脚
-  features/           # notes/tools/feeds/cheatsheets/mvps/patterns
+  features/           # notes/memos/tools/feeds/cheatsheets/mvps/patterns
   hooks/              # 跨领域 hooks
   lib/
     api/              # 请求封装与错误归一化
@@ -53,14 +53,14 @@ shadcn/ui 是组件的**来源**，不是运行时组件库：组件源码通过
 - 使用 React Router。
 - 路由按领域懒加载。
 - 当前无鉴权，管理类页面仅在本地/内网可用；公网不暴露写入口。
-- 公开页面：工具、Cheat Sheet、最佳实践、聚合。
+- 公开页面：首页（想法只读）、文章、工具、Cheat Sheet、最佳实践、聚合。
 
 主要路由：
 
 | 路径 | 页面 | 说明 |
 | --- | --- | --- |
-| `/` | 首页/工作台 | 最近记录、常用工具、热点摘要 |
-| `/notes`、`/notes/:id` | 记录列表与详情 | 编辑入口仅本地/内网 |
+| `/` | 轻量想法首页 | 想法日历、想法流、最近文章 |
+| `/notes`、`/notes/:id` | 文章列表与详情 | Markdown 正文；编辑入口仅本地/内网 |
 | `/tools`、`/tools/:slug` | 工具列表与工具页 | 无需登录 |
 | `/playground` | MVP 入口 | 独立路由 |
 | `/patterns` | 最佳实践 | — |
@@ -78,7 +78,8 @@ shadcn/ui 是组件的**来源**，不是运行时组件库：组件源码通过
 
 原则：
 
-- 服务端状态优先 RTK Query，不复制进普通 slice。
+- 当前实现仍以 `useAsyncData` + `src/api-client/client.ts` 为主，尚未迁移到 RTK Query；阶段 3 不为 Memos 引入 RTK Query，迁移作为后续独立任务。
+- 服务端状态优先 RTK Query，不复制进普通 slice（目标形态）。
 - 草稿与筛选条件可持久化。
 - 异步副作用放在 RTK Query 或 thunk，不写在 reducer。
 - 派生数据用 selector。
@@ -96,6 +97,15 @@ shadcn/ui 是组件的**来源**，不是运行时组件库：组件源码通过
 - 使用生成的 API 客户端；统一 baseURL、超时与错误归一化。
 - 错误映射为可展示消息；ProblemDetails 的 `title`/`detail` 可作为来源。
 - 外部数据展示 `fetchedAt`，过期时提示。
+- 想法流沿用现有 `useAsyncData` + `src/api-client/client.ts`，不为此迁移到 RTK Query；客户端补齐 POST/PATCH/DELETE、JSON body、204 与自定义请求头。
+- 口令只通过 `X-Memo-Passphrase` 头发送；前端保存在 `sessionStorage`，不进入 URL 与日志。
+
+## Markdown 文章
+
+- 文章正文继续以 `src/features/notes/content/posts/*.md` 存放，使用 Vite `import.meta.glob(..., { query: '?raw', import: 'default' })` 自动收集，不再手工逐个 import。
+- 渲染使用 `react-markdown` + `remark-gfm`，不启用原始 HTML。
+- 目录、标题锚点与代码块复制由渲染器组件映射实现；锚点生成函数在列表与详情间共享。
+- 阶段 3 只迁渲染与列表，文章元数据仍暂存在 `src/features/notes/data.ts`；frontmatter 迁移见 NOTE-14。
 
 ## 质量要求
 

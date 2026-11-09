@@ -20,6 +20,7 @@
 | [ADR-007](adr/ADR-007-auth-deferred.md) | 鉴权延后 | 已接受（延后） | 2026-11-07 |
 | [ADR-008](adr/ADR-008-social-sync-deferred.md) | 社交分发延后 | 已接受（延后） | 2026-11-07 |
 | [ADR-009](adr/ADR-009-native-aot-deferred.md) | 初期不启用 Native AOT | 已接受 | 2026-11-07 |
+| [ADR-010](adr/ADR-010-memo-passphrase.md) | 想法流使用共享口令保护写操作 | 已接受 | 2026-11-09 |
 
 ## 规则
 

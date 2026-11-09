@@ -7,11 +7,15 @@
 ### Added
 
 - 全生命周期文档结构：立项、需求、架构、设计、开发、质量、发布、运营、治理、参考。
-- 分模块 PRD：`docs/01-requirements/prd/`（平台、记录、工具、MVP、最佳实践、聚合、集成、Cheat Sheet、非功能）。
-- 独立 ADR：`docs/08-governance/adr/`（ADR-001～009）。
+- 分模块 PRD：`docs/01-requirements/prd/`（平台、文章与长文记录、工具、MVP、最佳实践、聚合、集成、Cheat Sheet、非功能、想法流）。
+- 独立 ADR：`docs/08-governance/adr/`（ADR-001～010）。
 - 阶段 1 交付计划：`docs/01-requirements/delivery-plan.md`（步骤 S0–S5、分步验收与出口门禁）。
 - 阶段 2 前端页面交付计划：`docs/01-requirements/delivery-plan-phase2.md`（步骤 P0–P7、分步验收与阶段出口）。
-- 阶段 3 首页与全局入口交付计划：`docs/01-requirements/delivery-plan-phase3.md`（步骤 H0–H6、混合式首页、六模块导航、主题三态、模块落地页与出口门禁 GH1–GH6）。
+- 阶段 3 首页、想法流与全局入口交付计划：`docs/01-requirements/delivery-plan-phase3.md`（步骤 H0–H6、轻量想法首页、想法日历、Memos 后端与口令、六模块导航、主题三态、模块落地页与出口门禁 GH1–GH7）。
+- PRD-09 想法流（Memos）：`docs/01-requirements/prd/prd-09-memos.md`，登记 `MEMO-01`～`MEMO-12`；首页短想法使用后端 `memos` 表，`#标签#` 语法，共享口令保护写操作，最近 52 周日历。
+- 阶段 3 文章呈现补充：`NOTE-13` 静态文章完整 Markdown 渲染，`NOTE-14` 元数据迁移到 frontmatter；`NOTE-14` 延后执行。
+- 通用贡献日历多色扩展登记为 `PLAT-14`：想法使用 `--heatmap-memo-*`，未来文章、工具使用独立色系。
+- ADR-010：想法流使用共享口令保护创建/编辑/删除，作为用户鉴权落地前的临时写保护；不替代网络限制。
 - 阶段 2 · P1 路由骨架：React Router 7 路由化，页面拆分到 `src/pages/`，筛选与归档模式进入 URL，旧 hash/query 链接归一化；`/step` 支持 `P*` 步骤。
 - 阶段 2 · P2 设计系统与主题基线：`index.css` 对齐设计 token 与 `.dark`，`app.css` 改为引用 token；引入 Redux Toolkit 承载主题与文库默认筛选，主题持久化并尊重 `prefers-color-scheme`；Header/Footer、首页台账与笔记搜索接入 shadcn `Button` / `Card` / `Input`；补充 `:focus-visible` 与 `prefers-reduced-motion`。
 - 阶段 2 · P3 通用页面组件与数据状态：新增 `PageHeader`、`SectionHeader`、`EmptyState`、`ErrorState`、`LoadingSkeleton`、`TagPill`、`SearchField`、`FilterTabs`；新增 `useAsyncData` 与统一 `AsyncState` / `AsyncError`，health 请求接入 loading/error/retry，笔记筛选空态提供「清除筛选」下一步。
@@ -38,15 +42,22 @@
 - 项目定位更新为“总结经验、记录想法 + 产品 MVP 游乐场”。
 - 主题切换从 `.theme-dark` 迁移到 `<html class="dark">`；旧 `--accent` 样式变量由设计 token `--primary` 取代。
 - 前端样式完成 Tailwind 迁移：`app.css` 删除，遗留 selector 与页面级旧类名一并移除；`index.css` 仅保留 token、base 重置、焦点与 reduced-motion 规则。
+- 首页定位从“混合式首页”收敛为“轻量想法首页”：导航下第一块为想法日历，其后为想法输入与时间线，底部为 5 条最近文章；移除 Hero、后端状态条、内容板块、引用块、内容方向、写作方向与统计条。
+- 阶段 3 范围从“仅首页与全局入口”扩展为“首页 + 想法流 + 全局入口”：新增 Memos 后端、EF Core 迁移、口令保护与 OpenAPI 契约；用户鉴权仍延后。
 
 ### Deferred
 
 - 用户鉴权（ADR-007）。
 - 社交平台一键分发（ADR-008）。
+- 想法按用户隔离与所有者权限（MEMO-11，依赖 ADR-007）。
+- 文章元数据迁移到 frontmatter（NOTE-14）；阶段 3 先完成渲染与首页列表。
+- 通用贡献日历多色扩展（PLAT-14）；阶段 3 只实现想法色系。
 
 ### Planned
 
-- 记录 CRUD 与检索（NOTE-01～NOTE-03）。
+- 文章与长文记录 CRUD 与检索（NOTE-01～NOTE-03）。
+- 想法流 CRUD、标签、口令与日历（MEMO-01～MEMO-10）。
+- 静态文章完整 Markdown 渲染（NOTE-13）。
 - 结构化日志与请求追踪（PLAT-08）、备份与导出脚本（PLAT-13）。
 
 ## [0.0.0] - 2026-10-29

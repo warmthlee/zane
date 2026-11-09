@@ -15,7 +15,8 @@ src-dotnet/
   Zane.Api/
     Program.cs               # 服务注册、中间件、端点映射
     Features/
-      Notes/                 # 端点 + handler + DTO
+      Notes/                 # 文章/长文（后续）
+      Memos/                 # 想法流端点、口令、标签解析
       Tools/
       Patterns/
       Cheatsheets/
@@ -81,15 +82,28 @@ src-dotnet/
 
 ## 数据模型（初版）
 
-### 记录
+### 文章与长文记录
 
 | 表 | 关键字段 | 说明 |
 | --- | --- | --- |
-| `notes` | id, title, content_md, status, created_at, updated_at, published_at | 思想记录 |
+| `notes` | id, title, content_md, status, created_at, updated_at, published_at | 文章/长文记录 |
 | `tags` | id, name, slug | 标签 |
 | `note_tags` | note_id, tag_id | 多对多 |
 
 `status`：`draft`、`published`、`archived`。
+
+### 想法流
+
+| 表 | 关键字段 | 说明 |
+| --- | --- | --- |
+| `memos` | id, content, created_at, updated_at, deleted_at | 首页短想法 |
+| `memo_tags` | id, memo_id, tag | 从正文解析出的标签 |
+
+- `content` 为纯文本，长度 1–500；不渲染 Markdown。
+- `deleted_at` 为空表示未删除；使用 EF Core 查询过滤器默认排除软删除记录。
+- 标签由服务端解析，规则见 [PRD-09](../01-requirements/prd/prd-09-memos.md#标签语法)；标签最长 32 字符，每条最多 8 个。
+- `memo_tags(memo_id, tag)` 唯一索引；`memo_tags(tag, memo_id)` 支持标签筛选。
+- 时间统一 UTC 存储；日历按 `Site:TimeZone`（默认 `Asia/Shanghai`）分组。
 
 ### 内容与工具
 
@@ -118,6 +132,7 @@ src-dotnet/
 
 - `notes(status, updated_at)`、`notes(published_at)`。
 - `note_tags(tag_id, note_id)`。
+- `memos(deleted_at, created_at)` 支持时间线；`memo_tags(memo_id, tag)` 唯一索引、`memo_tags(tag, memo_id)` 普通索引。
 - `feed_items(source_id, external_id)` 唯一索引。
 - 全文检索使用 SQLite FTS5；若 EF Core 映射不便，使用原生 SQL 查询并保持只读。
 
@@ -140,9 +155,22 @@ dotnet ef database update --project src-dotnet/Zane.Api
 - 通过 `HybridCache` 或数据库记录避免重复抓取。
 - 失败记录日志与 `last_error`，不抛出到请求线程。
 
+## 想法流口令与日历
+
+- 配置键：`Memos:Passphrase`，通过环境变量 `Memos__Passphrase` 或用户机密注入，不写入仓库；最小长度 8。
+- 服务端对配置值与请求值计算 SHA-256，使用 `CryptographicOperations.FixedTimeEquals` 比较。
+- 写请求使用 `X-Memo-Passphrase` 头；`POST /api/v1/memos/unlock` 仅校验口令，不建立服务端会话。
+- 解锁与写操作按来源 IP 使用 ASP.NET Core 限流：默认 5 次 / 5 分钟，超限 `429`。
+- 未配置口令时启动日志记录 warning，写接口与 `unlock` 返回 `503`（`MEMO_PASSPHRASE_NOT_CONFIGURED`）；生产部署必须配置，否则只允许只读。
+- 站点时区配置键：`Site:TimeZone`，默认 `Asia/Shanghai`；启动时用 `TimeZoneInfo.FindSystemTimeZoneById` 校验，无效则启动失败并记录明确错误。
+- 日历聚合按本地日期分组：先把 `created_at` 转为站点时区，再取 `yyyy-MM-dd`；返回 52 周完整日期，未来日期计数为 0。
+- SQLite 没有完整的 IANA 时区函数；日历查询只按 UTC 范围取出 `created_at`，在应用层用 `TimeZoneInfo` 分组，避免在 SQL 中做时区转换。
+- 共享口令不是用户鉴权，不提供按用户隔离与所有者判断；未来由 MEMO-11 替换。
+
 ## 安全
 
-- 写接口在鉴权落地前仅限本机/内网。
+- 写接口在鉴权落地前仅限本机/内网或受信网络；Memos 额外要求共享口令，但口令不能替代网络限制。
+- 口令不得写入日志、URL、query 或前端持久化到 `localStorage`；前端会话保存在 `sessionStorage`，收到 `401` 时清除。
 - SQLite 文件位于非静态目录，Web 服务器不可直接访问。
 - 连接字符串与会话密钥通过环境变量注入。
 - 外部输入统一校验；日志脱敏。

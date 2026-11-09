@@ -19,6 +19,8 @@
 
 执行步骤、分步验收与出口门禁见 [`delivery-plan.md`](delivery-plan.md)。步骤 S0–S5 已完成，`NOTE-01`～`NOTE-03` 的记录 CRUD 尚未开始。
 
+首页、想法流与全局入口的迭代见 [`delivery-plan-phase3.md`](delivery-plan-phase3.md)。其中 `memos` 是首页短想法，与 `NOTE-01` 的长文记录是两套独立模型；想法流的需求见 [PRD-09](prd/prd-09-memos.md)。
+
 - 前端统一在 `src/`；建立 `src-dotnet/` 与 `src/api-client/`。
 - .NET 10 API + EF Core 10 + SQLite 迁移。
 - 实现记录 CRUD、标签、检索与导出。
