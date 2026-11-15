@@ -1,0 +1,15 @@
+{
+  "sessionId": "a6569498-a352-41bc-821c-74685c7c02aa",
+  "tool": "claude",
+  "originalPath": "C:\\Users\\swust\\.claude\\projects\\d--source-zane\\a6569498-a352-41bc-821c-74685c7c02aa.jsonl",
+  "originalCwd": "d:\\source\\zane",
+  "byteLen": 4003722,
+  "sha256": "6aacd05c0aa68f22ee3bec0e4f01d5a8f5189eb0f7837a14fbe5a1f01a55e155",
+  "device": "swustlzx",
+  "cwdTok": "${CSS_PROJECT_ROOT}",
+  "relPath": "d--source-zane\\a6569498-a352-41bc-821c-74685c7c02aa.jsonl",
+  "lastTs": "2026-11-09T13:47:12.115Z",
+  "summary": "<ide_selection>The user selected the lines 1 to 1 from d:\\source\\zane\\docs\\01-requirements\\delivery-",
+  "toolVersion": "2.1.319",
+  "syncedAt": "2026-11-09T13:47:38.908Z"
+}
